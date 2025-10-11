@@ -18,7 +18,8 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
       {!isCheckout && <Navbar />}
 
       {/* Main area. For checkout, center and enlarge content for focus. */}
-      <main className={isCheckout ? 'min-h-screen bg-gray-50 pt-50' : 'min-h-screen'}>
+      {/* reduce top padding on checkout since Navbar is hidden there */}
+      <main className={isCheckout ? 'min-h-screen bg-gray-50 pt-6' : 'min-h-screen'}>
         {children}
       </main>
 

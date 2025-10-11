@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { CartItem } from '@/types';
 import { showToast } from '@/lib/cartUtils';
 
+// Destination WhatsApp number in international format without plus sign.
+// Keep only digits here; code will ensure proper prefix when needed.
 const WHATSAPP_NUMBER = '923456500649';
 
 export default function CheckoutPage() {
@@ -139,19 +141,43 @@ export default function CheckoutPage() {
 
     const message = buildWhatsAppMessage();
     const encoded = encodeURIComponent(message);
-    const link = `https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`;
+
+    // Normalize destination phone number: remove non-digits, ensure country code present
+    let dest = String(WHATSAPP_NUMBER || '').replace(/\D/g, '');
+    if (!dest) {
+      showToast('WhatsApp number not configured', 'error');
+      return;
+    }
+    // If the number starts with a leading 0, convert to international by replacing with 92
+    if (/^0\d{6,}$/.test(dest)) {
+      dest = '92' + dest.substring(1);
+    }
+
+    // Use the more widely supported send endpoint (works with web and mobile)
+    const link = `https://api.whatsapp.com/send?phone=${dest}&text=${encoded}`;
 
     try {
       localStorage.removeItem('checkoutData');
       localStorage.removeItem('panngrill-cart');
     } catch (e) {}
 
-    window.open(link, '_blank');
+    // Prefer opening in a new tab/window. Some browsers or popup blockers
+    // may block window.open; keep the anchor fallback which is reliable.
+    const newWin = window.open(link, '_blank', 'noopener,noreferrer');
+    if (!newWin) {
+      const a = document.createElement('a');
+      a.href = link;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
     showToast('Opening WhatsApp...');
 
-    setTimeout(() => {
-      router.push('/');
-    }, 2000);
+    
   };
 
   const handleClearCart = () => {
@@ -162,12 +188,12 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="pt-20 min-h-screen bg-gray-50">
+    <div className="pt-6 min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back button */}
         <div className="mb-4">
           <button
-            onClick={() => router.back()}
+            onClick={() => router.push('/menu')}
             className="inline-flex items-center px-3 py-2 rounded-md text-gray-700 bg-white border border-gray-200 hover:bg-gray-50"
           >
             <svg
@@ -306,13 +332,7 @@ export default function CheckoutPage() {
                 >
                   Place Order via WhatsApp
                 </button>
-                <button
-                  type="button"
-                  onClick={handleClearCart}
-                  className="w-full mt-3 border border-gray-300 text-gray-700 hover:bg-gray-50 py-3 rounded-lg font-semibold"
-                >
-                  Clear Cart
-                </button>
+                {/* Clear Cart button removed to simplify checkout flow */}
               </div>
 
               <p className="text-sm text-gray-500 mt-4">
