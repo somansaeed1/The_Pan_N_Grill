@@ -119,14 +119,14 @@ export const getCityFromCoordinates = async (
 ): Promise<string | null> => {
   try {
     // OpenStreetMap Nominatim reverse geocoding - NO API KEY REQUIRED!
-    const response = await fetch(
-      `${NOMINATIM_API_URL}/reverse?format=jsonv2&lat=${lat}&lon=${lng}`,
-      {
-        headers: {
-          'User-Agent': 'PanNGrill-Restaurant-App/1.0' // Required by Nominatim
-        }
-      }
-    );
+      // Note: browsers disallow setting the User-Agent header from client-side scripts.
+      // Nominatim requests identification via the User-Agent or an email, but that must
+      // be provided from a server environment. For client-side usage we avoid setting
+      // the header and rely on the public endpoint. If you run into rate-limiting,
+      // host a server-side proxy and include an explicit User-Agent or email.
+      const response = await fetch(
+        `${NOMINATIM_API_URL}/reverse?format=jsonv2&lat=${lat}&lon=${lng}&addressdetails=1`
+      );
 
     if (!response.ok) {
       throw new Error('Nominatim API request failed');
@@ -167,12 +167,8 @@ export const calculateDistance = (
   userLat: number,
   userLng: number
 ): number => {
-  return calculateHaversineDistance(
-    userLat,
-    userLng,
-    RESTAURANT_COORDS.lat,
-    RESTAURANT_COORDS.lng
-  );
+    // Return full precision; the UI will format to the desired precision (toFixed(2)).
+    return calculateHaversineDistance(userLat, userLng, RESTAURANT_COORDS.lat, RESTAURANT_COORDS.lng);
 };
 
 /**

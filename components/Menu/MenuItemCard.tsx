@@ -37,13 +37,14 @@ export default function MenuItemCard({ item }: MenuItemCardProps) {
 
   return (
     <article className="menu-item-card bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow flex flex-col h-full">
-      <div className="aspect-w-16 aspect-h-12 flex-shrink-0">
-        <img
-          src={item.image || `/placeholder.svg?height=200&width=300`}
-          alt={`${item.name} - Authentic Pakistani cuisine at The Pan N Grill`}
-          className="w-full h-full object-cover object-center"
-          style={{ height: '180px' }}
-        />
+      <div className="flex-shrink-0 w-full overflow-hidden">
+        <div className="w-full h-72 md:h-80 lg:h-64 xl:h-72 relative">
+          <img
+            src={item.image || `/placeholder.svg?height=200&width=300`}
+            alt={`${item.name} - Authentic Pakistani cuisine at The Pan N Grill`}
+            className="w-full h-full object-cover object-center absolute inset-0"
+          />
+        </div>
       </div>
 
       <div className="p-4 md:p-6 flex flex-col flex-1">

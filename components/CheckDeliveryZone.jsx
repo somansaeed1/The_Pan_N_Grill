@@ -11,7 +11,7 @@
  * NO API KEY REQUIRED! 🎉
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import {
   RESTAURANT_COORDS,
@@ -41,6 +41,53 @@ export default function CheckDeliveryZone() {
     errorMessage: null
   });
   const [showMap, setShowMap] = useState(true);
+
+  // Auto-detect location on first mount so the user sees the location handle/map marker
+  // without having to click the button. This will trigger the browser permission prompt.
+  // If you'd prefer not to auto-prompt, remove this effect.
+  useEffect(() => {
+    let mounted = true;
+
+    const tryAutoDetect = async () => {
+      // run after a short delay to ensure component is mounted
+      await new Promise(r => setTimeout(r, 100));
+
+      // If Permissions API is available, check geolocation permission state first
+      try {
+        if (navigator.permissions && navigator.permissions.query) {
+          const status = await navigator.permissions.query({ name: 'geolocation' });
+          // If permission is denied, don't auto-prompt — show a helpful message instead
+          if (status.state === 'denied') {
+            if (!mounted) return;
+            setZoneData(prev => ({
+              ...prev,
+              errorMessage: 'Location access appears to be blocked in your browser. Please enable location permission or use the manual coordinates below.'
+            }));
+            return;
+          }
+          // If prompt or granted, proceed to auto-detect (won't run if component unmounted)
+          if (status.state === 'prompt' || status.state === 'granted') {
+            if (!mounted) return;
+            detectLocation().catch(() => {});
+          }
+        } else {
+          // Fallback: call detectLocation (older browsers)
+          if (!mounted) return;
+          detectLocation().catch(() => {});
+        }
+      } catch (err) {
+        // If anything goes wrong querying permissions, fallback to calling detectLocation
+        if (!mounted) return;
+        detectLocation().catch(() => {});
+      }
+    };
+
+    tryAutoDetect();
+
+    return () => {
+      mounted = false;
+    };
+  }, [detectLocation]);
 
   /**
    * Main function to detect user location and calculate delivery zone
@@ -147,6 +194,52 @@ export default function CheckDeliveryZone() {
     });
   };
 
+  // Manual coordinate input fallback (useful if geolocation is denied)
+  const [manualLat, setManualLat] = useState('');
+  const [manualLng, setManualLng] = useState('');
+
+  const handleManualCheck = async () => {
+    const lat = parseFloat(manualLat);
+    const lng = parseFloat(manualLng);
+
+    if (Number.isNaN(lat) || Number.isNaN(lng)) {
+      setZoneData(prev => ({ ...prev, errorMessage: 'Please enter valid latitude and longitude values.' }));
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const cityName = await getCityFromCoordinates(lat, lng);
+      if (!cityName) {
+        setZoneData({
+          userLocation: { lat, lng },
+          cityName: null,
+          distanceKm: null,
+          orderRule: null,
+          deliveryAllowed: false,
+          errorMessage: `Could not determine your city from the provided coordinates. Please verify the coordinates or try again.`
+        });
+        return;
+      }
+
+      const distanceKm = calculateDistance(lat, lng);
+      const orderRule = getOrderLimit(distanceKm);
+
+      setZoneData({
+        userLocation: { lat, lng },
+        cityName,
+        distanceKm,
+        orderRule,
+        deliveryAllowed: isDeliveryAvailable(cityName),
+        errorMessage: null
+      });
+    } catch (err) {
+      setZoneData(prev => ({ ...prev, errorMessage: err instanceof Error ? err.message : 'Manual coordinate check failed' }));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="w-full max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-lg">
       {/* Header */}
@@ -214,6 +307,34 @@ export default function CheckDeliveryZone() {
           </p>
         </div>
       )}
+
+      {/* Manual coordinates fallback */}
+      <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <p className="text-sm text-yellow-800 mb-2">If 'Detect My Location' doesn't work, you can enter your coordinates manually (latitude and longitude):</p>
+        <div className="flex gap-2 flex-wrap">
+          <input
+            type="text"
+            placeholder="Latitude (e.g. 31.277761)"
+            value={manualLat}
+            onChange={(e) => setManualLat(e.target.value)}
+            className="px-3 py-2 border rounded-lg w-48"
+          />
+          <input
+            type="text"
+            placeholder="Longitude (e.g. 72.321373)"
+            value={manualLng}
+            onChange={(e) => setManualLng(e.target.value)}
+            className="px-3 py-2 border rounded-lg w-48"
+          />
+          <button
+            onClick={handleManualCheck}
+            disabled={loading}
+            className="px-4 py-2 bg-yellow-500 text-white rounded-lg shadow-md hover:bg-yellow-600 disabled:opacity-50"
+          >
+            Check Coordinates
+          </button>
+        </div>
+      </div>
 
       {zoneData.deliveryAllowed && zoneData.orderRule && (
         <div className="mb-6 p-6 bg-gradient-to-br from-green-50 to-blue-50 border-2 border-green-300 rounded-lg">
