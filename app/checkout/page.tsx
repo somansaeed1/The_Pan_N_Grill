@@ -4,6 +4,7 @@ import { useState, useEffect, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { CartItem } from '@/types';
 import { showToast } from '@/lib/cartUtils';
+import { useCart } from '@/components/Cart/CartProvider';
 
 // Destination WhatsApp number in international format without plus sign.
 // Keep only digits here; code will ensure proper prefix when needed.
@@ -12,6 +13,7 @@ const WHATSAPP_NUMBER = '923456500649';
 
 export default function CheckoutPage() {
   const router = useRouter();
+  const { clearCart } = useCart();
   const [cartData, setCartData] = useState<{ items: CartItem[]; total: number } | null>(null);
   const [formData, setFormData] = useState({
     fullName: '',
@@ -154,25 +156,20 @@ export default function CheckoutPage() {
     const whatsappUrl = getWhatsAppUrl();
     console.log('Opening WhatsApp URL:', whatsappUrl);
 
-    // Clear cart data BEFORE opening WhatsApp
-    try {
-      localStorage.removeItem('checkoutData');
-      localStorage.removeItem('panngrill-cart');
-    } catch (e) {
-      console.error('Error clearing localStorage:', e);
-    }
-
-    // Direct navigation - most reliable method
-    window.location.href = whatsappUrl;
+    // Clear cart and checkout data after order is placed
+    clearCart();
+    localStorage.removeItem('checkoutData');
+    localStorage.removeItem('panngrill-cart'); // Ensure cart is cleared from localStorage
+    setCartData({ items: [], total: 0 }); // Clear local cartData state
+    showToast('Order placed successfully!', 'success');
+    
+    // Use setTimeout to ensure state updates complete before navigation
+    setTimeout(() => {
+      window.location.href = whatsappUrl;
+    }, 100);
   };
 
-  const handleClearCart = () => {
-    if (confirm('Clear cart?')) {
-      localStorage.removeItem('checkoutData');
-      setCartData({ items: [], total: 0 });
-    }
-  };
-
+  
   return (
     <div className="pt-6 min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -317,32 +314,29 @@ export default function CheckoutPage() {
                 href={getWhatsAppUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (validateForm()) {
+                    clearCart();
+                    localStorage.removeItem('checkoutData');
+                    localStorage.removeItem('panngrill-cart');
+                    setCartData({ items: [], total: 0 }); // Clear local cartData state
+                    showToast('Order placed successfully!', 'success');
+                    setTimeout(() => {
+                      window.open(getWhatsAppUrl(), '_blank');
+                    }, 100);
+                  }
+                }}
                 className="block w-full text-center bg-white border-2 border-[#25D366] text-[#25D366] hover:bg-[#25D366] hover:text-white py-3 rounded-lg font-semibold transition-colors"
               >
-                Or Click Here to Open WhatsApp Directly
+                Place Order via WhatsApp
               </a>
               )}
-              <div className="flex justify-between items-center pt-4">
-              <button
-                type="submit"
-                className="bg-gold-600 hover:bg-gold-700 text-white py-3 px-6 rounded-lg font-semibold transition-colors"
-                disabled={!cartData || cartData.items.length === 0}
-              >
-                Place Order via WhatsApp
-              </button>
-              <button
-                type="button"
-                onClick={handleClearCart}
-                className="ml-4 text-red-600 hover:underline"
-              >
-                Clear Cart
-              </button>
-              </div>
+              
             </form>
-
-              <p className="text-sm text-gray-500 mt-4">
-                Your cart contents will be sent via WhatsApp. No information is submitted to a
-                server by this form.
+            <p className="text-sm text-gray-500 mt-4">
+              Your cart contents will be sent via WhatsApp. No information is submitted to a
+              server by this form.
               </p>
           </div>
           {/* Summary column */}

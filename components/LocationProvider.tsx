@@ -6,18 +6,22 @@ import { DeliveryInfo } from '@/types';
 
 export default function LocationProvider() {
   const [showLocationModal, setShowLocationModal] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
     // Check if user has already provided location
     const savedLocation = localStorage.getItem('panngrill-location');
     if (!savedLocation) {
-      // Show modal after a short delay to allow page to load
-      const timer = setTimeout(() => {
-        setShowLocationModal(true);
-      }, 1000);
-      return () => clearTimeout(timer);
+      // Show modal immediately once component is mounted
+      setShowLocationModal(true);
     }
-  }, []);
+  }, [mounted]);
 
   const handleLocationClose = (decision: DeliveryInfo | null) => {
     setShowLocationModal(false);
