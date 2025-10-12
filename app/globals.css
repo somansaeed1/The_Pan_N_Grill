@@ -7,10 +7,17 @@
     --font-body: var(--font-poppins);
     --font-heading: var(--font-playfair);
     --font-script: var(--font-dancing);
+    --font-logo: var(--font-great-vibes);
   }
 
   body {
     font-family: var(--font-body);
+  }
+
+  .font-logo {
+    font-family: var(--font-great-vibes), 'Great Vibes', cursive !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
   }
 
   /* Keep horizontal scrolling functional but hide the scrollbar visuals.

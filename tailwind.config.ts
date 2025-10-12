@@ -43,7 +43,7 @@ const config: Config = {
         script: ['Dancing Script', 'cursive'],
         heading: ['Playfair Display', 'serif'],
         body: ['Poppins', 'sans-serif'],
-        logo: ['Allura', 'cursive'],
+        logo: ['Great Vibes', 'cursive'],
         logoAlt: ['Alex Brush', 'cursive'],
         logoScript: ['Great Vibes', 'cursive']
       }

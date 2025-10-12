@@ -9,6 +9,7 @@ import { showToast } from '@/lib/cartUtils';
 // Keep only digits here; code will ensure proper prefix when needed.
 const WHATSAPP_NUMBER = '923456500649';
 
+
 export default function CheckoutPage() {
   const router = useRouter();
   const [cartData, setCartData] = useState<{ items: CartItem[]; total: number } | null>(null);
@@ -129,6 +130,15 @@ export default function CheckoutPage() {
     return lines.join('\n');
   };
 
+  const getWhatsAppUrl = (): string => {
+    const message = buildWhatsAppMessage();
+    let phoneNumber = WHATSAPP_NUMBER.replace(/\D/g, '');
+    if (phoneNumber.startsWith('0')) {
+      phoneNumber = '92' + phoneNumber.substring(1);
+    }
+    return `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+  };
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
@@ -137,47 +147,23 @@ export default function CheckoutPage() {
       return;
     }
 
-    if (!validateForm()) return;
-
-    const message = buildWhatsAppMessage();
-    const encoded = encodeURIComponent(message);
-
-    // Normalize destination phone number: remove non-digits, ensure country code present
-    let dest = String(WHATSAPP_NUMBER || '').replace(/\D/g, '');
-    if (!dest) {
-      showToast('WhatsApp number not configured', 'error');
+    if (!validateForm()) {
       return;
     }
-    // If the number starts with a leading 0, convert to international by replacing with 92
-    if (/^0\d{6,}$/.test(dest)) {
-      dest = '92' + dest.substring(1);
-    }
 
-    // Use the more widely supported send endpoint (works with web and mobile)
-    const link = `https://api.whatsapp.com/send?phone=${dest}&text=${encoded}`;
+    const whatsappUrl = getWhatsAppUrl();
+    console.log('Opening WhatsApp URL:', whatsappUrl);
 
+    // Clear cart data BEFORE opening WhatsApp
     try {
       localStorage.removeItem('checkoutData');
       localStorage.removeItem('panngrill-cart');
-    } catch (e) {}
-
-    // Prefer opening in a new tab/window. Some browsers or popup blockers
-    // may block window.open; keep the anchor fallback which is reliable.
-    const newWin = window.open(link, '_blank', 'noopener,noreferrer');
-    if (!newWin) {
-      const a = document.createElement('a');
-      a.href = link;
-      a.target = '_blank';
-      a.rel = 'noopener noreferrer';
-      a.style.display = 'none';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+    } catch (e) {
+      console.error('Error clearing localStorage:', e);
     }
 
-    showToast('Opening WhatsApp...');
-
-    
+    // Direct navigation - most reliable method
+    window.location.href = whatsappUrl;
   };
 
   const handleClearCart = () => {
@@ -219,129 +205,146 @@ export default function CheckoutPage() {
             <h2 className="text-2xl font-heading font-semibold mb-4">Checkout</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
-                  Full Name *
-                </label>
-                <input
-                  id="fullName"
-                  name="fullName"
-                  type="text"
-                  required
-                  value={formData.fullName}
-                  onChange={handleInputChange}
-                  placeholder="Your name"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gold-500 focus:ring-gold-500"
-                />
-                {errors.fullName && (
-                  <div className="text-sm text-red-600 mt-1">{errors.fullName}</div>
-                )}
+              <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
+                Full Name *
+              </label>
+              <input
+                id="fullName"
+                name="fullName"
+                type="text"
+                required
+                value={formData.fullName}
+                onChange={handleInputChange}
+                placeholder="Your name"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gold-500 focus:ring-gold-500"
+              />
+              {errors.fullName && (
+                <div className="text-sm text-red-600 mt-1">{errors.fullName}</div>
+              )}
               </div>
 
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                  Phone Number *
-                </label>
-                <input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  required
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  placeholder="92300XXXXXXX or +92300XXXXXXX"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gold-500 focus:ring-gold-500"
-                />
-                {errors.phone && <div className="text-sm text-red-600 mt-1">{errors.phone}</div>}
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                Phone Number *
+              </label>
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                required
+                value={formData.phone}
+                onChange={handleInputChange}
+                placeholder="92300XXXXXXX or +92300XXXXXXX"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-gold-500 focus:ring-gold-500"
+              />
+              {errors.phone && <div className="text-sm text-red-600 mt-1">{errors.phone}</div>}
               </div>
 
               <div>
-                <label htmlFor="orderNotes" className="block text-sm font-medium text-gray-700">
-                  Order Notes (optional)
-                </label>
-                <input
-                  id="orderNotes"
-                  name="orderNotes"
-                  type="text"
-                  value={formData.orderNotes}
-                  onChange={handleInputChange}
-                  placeholder="Any instruction"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                />
+              <label htmlFor="orderNotes" className="block text-sm font-medium text-gray-700">
+                Order Notes (optional)
+              </label>
+              <input
+                id="orderNotes"
+                name="orderNotes"
+                type="text"
+                value={formData.orderNotes}
+                onChange={handleInputChange}
+                placeholder="Any instruction"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+              />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="method" className="block text-sm font-medium text-gray-700">
-                    Method
-                  </label>
-                  <select
-                    id="method"
-                    name="method"
-                    value={formData.method}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                  >
-                    <option value="Delivery">Delivery</option>
-                    <option value="Pickup">Pickup</option>
-                  </select>
-                </div>
-                <div>
-                  <label htmlFor="payment" className="block text-sm font-medium text-gray-700">
-                    Payment
-                  </label>
-                  <select
-                    id="payment"
-                    name="payment"
-                    value={formData.payment}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                  >
-                    <option>Cash on Delivery</option>
-                    <option>Card on Delivery</option>
-                    <option>Other</option>
-                  </select>
-                </div>
+              <div>
+                <label htmlFor="method" className="block text-sm font-medium text-gray-700">
+                Method
+                </label>
+                <select
+                id="method"
+                name="method"
+                value={formData.method}
+                onChange={handleInputChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                >
+                <option value="Delivery">Delivery</option>
+                <option value="Pickup">Pickup</option>
+                </select>
+              </div>
+              <div>
+                <label htmlFor="payment" className="block text-sm font-medium text-gray-700">
+                Payment
+                </label>
+                <select
+                id="payment"
+                name="payment"
+                value={formData.payment}
+                onChange={handleInputChange}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                >
+                <option>Cash on Delivery</option>
+                <option>Card on Delivery</option>
+                <option>Other</option>
+                </select>
+              </div>
               </div>
 
               {formData.method === 'Delivery' && (
-                <div>
-                  <label
-                    htmlFor="deliveryAddress"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Delivery Location / Address *
-                  </label>
-                  <textarea
-                    id="deliveryAddress"
-                    name="deliveryAddress"
-                    value={formData.deliveryAddress}
-                    onChange={handleInputChange}
-                    placeholder="Address, landmark..."
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                  />
-                  {errors.address && (
-                    <div className="text-sm text-red-600 mt-1">{errors.address}</div>
-                  )}
-                </div>
-              )}
-
-              <div className="pt-4">
-                <button
-                  type="submit"
-                  className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white py-3 rounded-lg font-semibold"
+              <div>
+                <label
+                htmlFor="deliveryAddress"
+                className="block text-sm font-medium text-gray-700"
                 >
-                  Place Order via WhatsApp
-                </button>
-                {/* Clear Cart button removed to simplify checkout flow */}
+                Delivery Location / Address *
+                </label>
+                <textarea
+                id="deliveryAddress"
+                name="deliveryAddress"
+                value={formData.deliveryAddress}
+                onChange={handleInputChange}
+                placeholder="Address, landmark..."
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                />
+                {errors.address && (
+                <div className="text-sm text-red-600 mt-1">{errors.address}</div>
+                )}
               </div>
+              )}
+              
+              {/* Alternative direct link if button doesn't work */}
+              {cartData && cartData.items.length > 0 && formData.fullName && formData.phone && (
+              <a
+                href={getWhatsAppUrl()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full text-center bg-white border-2 border-[#25D366] text-[#25D366] hover:bg-[#25D366] hover:text-white py-3 rounded-lg font-semibold transition-colors"
+              >
+                Or Click Here to Open WhatsApp Directly
+              </a>
+              )}
+              <div className="flex justify-between items-center pt-4">
+              <button
+                type="submit"
+                className="bg-gold-600 hover:bg-gold-700 text-white py-3 px-6 rounded-lg font-semibold transition-colors"
+                disabled={!cartData || cartData.items.length === 0}
+              >
+                Place Order via WhatsApp
+              </button>
+              <button
+                type="button"
+                onClick={handleClearCart}
+                className="ml-4 text-red-600 hover:underline"
+              >
+                Clear Cart
+              </button>
+              </div>
+            </form>
 
               <p className="text-sm text-gray-500 mt-4">
                 Your cart contents will be sent via WhatsApp. No information is submitted to a
                 server by this form.
               </p>
-            </form>
           </div>
-
           {/* Summary column */}
           <aside className="bg-white border rounded-lg shadow-sm p-6 h-full flex flex-col lg:sticky lg:top-24">
             <h3 className="text-lg font-semibold mb-4">Order Summary</h3>
