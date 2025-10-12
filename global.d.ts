@@ -15,4 +15,9 @@ declare module '*?url' {
   export default url;
 }
 
+// Leaflet types (open-source map library)
+declare module 'leaflet' {
+  export * from 'leaflet';
+}
+
 export {};

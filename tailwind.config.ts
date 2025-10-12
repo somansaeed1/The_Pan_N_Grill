@@ -40,12 +40,12 @@ const config: Config = {
         }
       },
       fontFamily: {
-        script: ['Dancing Script', 'cursive'],
-        heading: ['Playfair Display', 'serif'],
-        body: ['Poppins', 'sans-serif'],
-        logo: ['Great Vibes', 'cursive'],
-        logoAlt: ['Alex Brush', 'cursive'],
-        logoScript: ['Great Vibes', 'cursive']
+        script: ['var(--font-script)'],
+        heading: ['var(--font-heading)'],
+        body: ['var(--font-body)'],
+        logo: ['var(--font-logo)'],
+        logoAlt: ['var(--font-logo)'],
+        logoScript: ['var(--font-logo)']
       }
     },
   },
