@@ -42,53 +42,6 @@ export default function CheckDeliveryZone() {
   });
   const [showMap, setShowMap] = useState(true);
 
-  // Auto-detect location on first mount so the user sees the location handle/map marker
-  // without having to click the button. This will trigger the browser permission prompt.
-  // If you'd prefer not to auto-prompt, remove this effect.
-  useEffect(() => {
-    let mounted = true;
-
-    const tryAutoDetect = async () => {
-      // run after a short delay to ensure component is mounted
-      await new Promise(r => setTimeout(r, 100));
-
-      // If Permissions API is available, check geolocation permission state first
-      try {
-        if (navigator.permissions && navigator.permissions.query) {
-          const status = await navigator.permissions.query({ name: 'geolocation' });
-          // If permission is denied, don't auto-prompt — show a helpful message instead
-          if (status.state === 'denied') {
-            if (!mounted) return;
-            setZoneData(prev => ({
-              ...prev,
-              errorMessage: 'Location access appears to be blocked in your browser. Please enable location permission or use the manual coordinates below.'
-            }));
-            return;
-          }
-          // If prompt or granted, proceed to auto-detect (won't run if component unmounted)
-          if (status.state === 'prompt' || status.state === 'granted') {
-            if (!mounted) return;
-            detectLocation().catch(() => {});
-          }
-        } else {
-          // Fallback: call detectLocation (older browsers)
-          if (!mounted) return;
-          detectLocation().catch(() => {});
-        }
-      } catch (err) {
-        // If anything goes wrong querying permissions, fallback to calling detectLocation
-        if (!mounted) return;
-        detectLocation().catch(() => {});
-      }
-    };
-
-    tryAutoDetect();
-
-    return () => {
-      mounted = false;
-    };
-  }, [detectLocation]);
-
   /**
    * Main function to detect user location and calculate delivery zone
    */
@@ -179,6 +132,7 @@ export default function CheckDeliveryZone() {
       setLoading(false);
     }
   }, []);
+
 
   /**
    * Clear/reset function
@@ -415,9 +369,10 @@ export default function CheckDeliveryZone() {
       <div className="bg-gray-50 p-4 rounded-lg">
         <h4 className="font-semibold text-gray-700 mb-2">📋 Delivery Rules:</h4>
         <ul className="space-y-2 text-sm text-gray-600">
-          <li>✅ <strong>0-2 km:</strong> No minimum order</li>
-          <li>⚠️ <strong>3-5 km:</strong> Minimum order Rs. 1000</li>
-          <li>⚠️ <strong>&gt;5 km:</strong> Minimum order Rs. 1500</li>
+          <li>✅ <strong>0-3 km:</strong> No minimum order</li>
+          <li>✅ <strong>3-5 km:</strong> No minimum order</li>
+          <li>⚠️ <strong>5-10 km:</strong> Minimum order Rs. 2000</li>
+          <li>❌ <strong>&gt;10 km:</strong> Delivery not available</li>
           <li>❌ <strong>Outside {DELIVERY_CITY}:</strong> Delivery not available</li>
         </ul>
       </div>

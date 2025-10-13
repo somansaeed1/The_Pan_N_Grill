@@ -2,7 +2,14 @@
 
 import { useState } from 'react';
 import { DeliveryInfo } from '@/types';
-import { calculateDistanceKm, SHOP_COORDS } from '@/lib/locationUtils';
+import { 
+  calculateDistance, 
+  getOrderLimit, 
+  isDeliveryAvailableByDistance,
+  isDeliveryAvailable,
+  getCityFromCoordinates,
+  getUserLocation
+} from '@/lib/deliveryZoneUtils';
 
 interface LocationModalProps {
   open: boolean;
@@ -12,88 +19,97 @@ interface LocationModalProps {
 export default function LocationModal({ open, onClose }: LocationModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [consent, setConsent] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showManualEntry, setShowManualEntry] = useState(false);
+  const [locationData, setLocationData] = useState<{
+    lat: number;
+    lng: number;
+    cityName: string | null;
+    distanceKm: number;
+    deliveryAllowed: boolean;
+    orderRule: any;
+  } | null>(null);
 
-  const applyDecision = (lat: number, lng: number, displayName?: string) => {
-    const dist = calculateDistanceKm(lat, lng, SHOP_COORDS.lat, SHOP_COORDS.lng);
-    let decision: DeliveryInfo = {
-      distanceKm: +dist.toFixed(2),
-      allowed: true,
-      minOrder: 0,
-      message: '',
-    };
-
-    if (dist <= 3) {
-      decision.message = 'You are within 3 km — delivery is free.';
-      decision.minOrder = 0;
-    } else if (dist > 3 && dist <= 5) {
-      decision.message = `Delivery available — distance ${decision.distanceKm} km.`;
-      decision.minOrder = 0;
-    } else if (dist > 5 && dist <= 10) {
-      decision.message = `You are ${decision.distanceKm} km away — minimum order PKR 2000 applies.`;
-      decision.minOrder = 2000;
-    } else {
-      decision.message = `Delivery not available — ${decision.distanceKm} km is outside our delivery area.`;
-      decision.allowed = false;
-      decision.minOrder = 0;
-    }
-
-    // Save location if consent given
-    try {
-      if (consent) {
-        const mapsLink = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
-        const locSnapshot = {
-          lat: +lat,
-          lng: +lng,
-          timestamp: Date.now(),
-          distanceKm: decision.distanceKm,
-          message: decision.message,
-          mapsLink,
-          name: displayName || null,
-        };
-        localStorage.setItem('panngrill-location', JSON.stringify(locSnapshot));
-      }
-    } catch (e) {}
-
-    onClose(decision);
-  };
-
-  const useGeolocation = () => {
+  const handleLocationSelect = (data: {
+    lat: number;
+    lng: number;
+    cityName: string | null;
+    distanceKm: number;
+    deliveryAllowed: boolean;
+    orderRule: any;
+  }) => {
+    setLocationData(data);
     setError('');
-    if (!('geolocation' in navigator)) {
-      setError('Geolocation is not supported by your browser.');
-      return;
-    }
-    setLoading(true);
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setLoading(false);
-        const { latitude, longitude } = pos.coords;
-        applyDecision(latitude, longitude);
-      },
-      (err) => {
-        setLoading(false);
-        if (err.code === 1) {
-          setError(
-            'Permission denied. Please allow location access in your browser settings and try again.'
-          );
-        } else if (err.code === 2) {
-          setError(
-            'Position unavailable. Your device could not determine a location. Try again or enter it manually.'
-          );
-        } else if (err.code === 3) {
-          setError('Location request timed out. Please try again.');
-        } else {
-          setError(
-            'Unable to get your location. Please enter it manually or ensure location access is allowed.'
-          );
-        }
-      },
-      { timeout: 15000 }
-    );
   };
+
+  const handleAutoDetect = async () => {
+    setLoading(true);
+    setError('');
+    
+    try {
+      // Get user location
+      const userCoords = await getUserLocation();
+      
+      // Calculate distance
+      const distanceKm = calculateDistance(userCoords.lat, userCoords.lng);
+      
+      // Check distance-based delivery availability
+      const distanceDeliveryAllowed = isDeliveryAvailableByDistance(distanceKm);
+      
+      // Get city name
+      let cityName: string | null = null;
+      try {
+        cityName = await getCityFromCoordinates(userCoords.lat, userCoords.lng);
+      } catch (err) {
+        console.warn('Could not get city name:', err);
+      }
+      
+      // Check city-based delivery availability
+      const cityDeliveryAllowed = isDeliveryAvailable(cityName);
+      
+      // Get order rule
+      const orderRule = getOrderLimit(distanceKm);
+      
+      // Overall delivery availability
+      const deliveryAllowed = distanceDeliveryAllowed && cityDeliveryAllowed;
+      
+      // Store location data
+      const data = {
+        lat: userCoords.lat,
+        lng: userCoords.lng,
+        cityName,
+        distanceKm,
+        deliveryAllowed,
+        orderRule
+      };
+      
+      setLocationData(data);
+      
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to detect location');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const saveLocation = (data: any) => {
+    try {
+      const mapsLink = `https://www.google.com/maps/search/?api=1&query=${data.lat},${data.lng}`;
+      const locSnapshot = {
+        lat: +data.lat,
+        lng: +data.lng,
+        timestamp: Date.now(),
+        distanceKm: data.distanceKm,
+        message: data.orderRule.message,
+        mapsLink,
+        name: data.cityName || null,
+        deliveryAllowed: data.deliveryAllowed,
+        orderRule: data.orderRule
+      };
+      localStorage.setItem('panngrill-location', JSON.stringify(locSnapshot));
+    } catch (e) {
+      console.warn('Could not save location:', e);
+    }
+  };
+
 
   if (!open) return null;
 
@@ -107,52 +123,50 @@ export default function LocationModal({ open, onClose }: LocationModalProps) {
 
         {error && <p className="text-sm text-red-600 mb-3">{error}</p>}
 
-        <div className="flex flex-col sm:flex-row gap-3 mb-4">
+        {/* Action Button */}
+        <div className="mb-4">
           <button
-            onClick={useGeolocation}
+            onClick={handleAutoDetect}
             disabled={loading}
-            className="flex-1 bg-gold-500 hover:bg-gold-600 disabled:bg-gray-400 text-white py-2 rounded transition-colors"
+            className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-400 text-white py-2 rounded transition-colors"
           >
             {loading ? 'Getting location...' : 'Use my device location'}
           </button>
-
-          <button
-            onClick={() => setShowManualEntry(!showManualEntry)}
-            className="flex-1 bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 py-2 rounded transition-colors"
-          >
-            Enter manually
-          </button>
         </div>
 
-        <div className="flex items-center gap-2 text-sm text-gray-700 mb-4">
-          <input
-            id="locConsent"
-            type="checkbox"
-            checked={consent}
-            onChange={(e) => setConsent(e.target.checked)}
-            className="w-4 h-4"
-          />
-          <label htmlFor="locConsent">
-            Allow saving & sharing my current location for delivery (saved for 1 hour). I can clear
-            this later.
-          </label>
-        </div>
-
-        {showManualEntry && (
-          <div className="mb-3">
-            <input
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Enter your address"
-              className="w-full border px-3 py-2 rounded"
-            />
-            <p className="text-xs text-gray-500 mt-2">
-              Manual address search functionality would connect to a geocoding API in production.
-            </p>
+        {/* Location Detection Results */}
+        {locationData && (
+          <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <h4 className="font-semibold text-gray-800 mb-2">📍 Location Selected</h4>
+            <div className="grid grid-cols-2 gap-2 text-sm">
+              <div>
+                <span className="text-gray-600">City:</span>
+                <span className="ml-1 font-medium">{locationData.cityName || 'Unknown'}</span>
+              </div>
+              <div>
+                <span className="text-gray-600">Distance:</span>
+                <span className="ml-1 font-medium">{locationData.distanceKm.toFixed(2)} km</span>
+              </div>
+              <div>
+                <span className="text-gray-600">Delivery:</span>
+                <span className={`ml-1 font-medium ${locationData.deliveryAllowed ? 'text-green-600' : 'text-red-600'}`}>
+                  {locationData.deliveryAllowed ? 'Available' : 'Not Available'}
+                </span>
+              </div>
+              <div>
+                <span className="text-gray-600">Min Order:</span>
+                <span className="ml-1 font-medium">
+                  {locationData.orderRule.minOrder === 0 ? 'None' : `Rs. ${locationData.orderRule.minOrder}`}
+                </span>
+              </div>
+            </div>
+            <p className="text-xs text-gray-600 mt-2">{locationData.orderRule.message}</p>
           </div>
         )}
 
-        <div className="flex justify-end items-center mt-4">
+
+
+        <div className="flex justify-between items-center mt-4">
           <button
             onClick={() =>
               onClose({ distanceKm: null, allowed: true, minOrder: 0, message: 'Location not provided' })
@@ -161,6 +175,34 @@ export default function LocationModal({ open, onClose }: LocationModalProps) {
           >
             Skip for now
           </button>
+          
+          {locationData && (
+            <button
+              onClick={() => {
+                const decision: DeliveryInfo = {
+                  distanceKm: locationData.distanceKm,
+                  allowed: locationData.deliveryAllowed,
+                  minOrder: locationData.orderRule.minOrder,
+                  message: locationData.orderRule.message,
+                };
+                // Also save the full location data for the hook to use
+                const fullLocationData = {
+                  ...decision,
+                  lat: locationData.lat,
+                  lng: locationData.lng,
+                  name: locationData.cityName,
+                  orderRule: locationData.orderRule,
+                  deliveryAllowed: locationData.deliveryAllowed,
+                  hasLocation: true
+                };
+                localStorage.setItem('panngrill-location', JSON.stringify(fullLocationData));
+                onClose(decision);
+              }}
+              className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded text-sm transition-colors"
+            >
+              Continue with Location
+            </button>
+          )}
         </div>
       </div>
     </div>

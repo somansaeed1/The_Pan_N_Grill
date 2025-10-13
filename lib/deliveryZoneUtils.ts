@@ -6,8 +6,8 @@
 
 // Restaurant coordinates - The Pan N Grill, Jhang
 export const RESTAURANT_COORDS = { 
-  lat: 31.277761, 
-  lng: 72.321373 
+  lat: 31.2681, 
+  lng: 72.3317 
 };
 
 // Delivery city constraint
@@ -30,24 +30,31 @@ export interface OrderLimitRule {
 export const ORDER_LIMIT_RULES: OrderLimitRule[] = [
   {
     minDistance: 0,
-    maxDistance: 2,
+    maxDistance: 3,
     minOrder: 0,
     message: 'No minimum order required',
     emoji: '✅'
   },
   {
-    minDistance: 2.01,
+    minDistance: 3.01,
     maxDistance: 5,
-    minOrder: 1000,
-    message: 'Minimum order: Rs. 1000',
-    emoji: '⚠️'
+    minOrder: 0,
+    message: 'No minimum order required',
+    emoji: '✅'
   },
   {
     minDistance: 5.01,
-    maxDistance: Infinity,
-    minOrder: 1500,
-    message: 'Minimum order: Rs. 1500',
+    maxDistance: 10,
+    minOrder: 2000,
+    message: 'Minimum order: Rs. 2000',
     emoji: '⚠️'
+  },
+  {
+    minDistance: 10.01,
+    maxDistance: Infinity,
+    minOrder: 0,
+    message: 'Delivery not available',
+    emoji: '❌'
   }
 ];
 
@@ -105,6 +112,15 @@ export const getOrderLimit = (distanceKm: number): OrderLimitRule => {
 export const isDeliveryAvailable = (cityName: string | null): boolean => {
   if (!cityName) return false;
   return cityName.toLowerCase().includes(DELIVERY_CITY.toLowerCase());
+};
+
+/**
+ * Check if delivery is available based on distance
+ * @param distanceKm - Distance in kilometers
+ * @returns true if delivery is available
+ */
+export const isDeliveryAvailableByDistance = (distanceKm: number): boolean => {
+  return distanceKm <= 10;
 };
 
 /**
@@ -179,6 +195,39 @@ export const calculateDistance = (
  */
 export const validateOrderTotal = (orderTotal: number, minOrder: number): boolean => {
   return orderTotal >= minOrder;
+};
+
+/**
+ * Search for locations using OpenStreetMap Nominatim API (FREE!)
+ * @param query - Search query (e.g., "jhang", "jhang sadar")
+ * @returns Promise with array of location results
+ */
+export const searchLocations = async (query: string): Promise<Array<{
+  display_name: string;
+  lat: string;
+  lon: string;
+  place_id: string;
+  type: string;
+}>> => {
+  try {
+    if (!query.trim()) {
+      return [];
+    }
+
+    const response = await fetch(
+      `${NOMINATIM_API_URL}/search?format=json&q=${encodeURIComponent(query)}&limit=5&addressdetails=1&countrycodes=pk`
+    );
+
+    if (!response.ok) {
+      throw new Error('Location search failed');
+    }
+
+    const data = await response.json();
+    return data || [];
+  } catch (error) {
+    console.error('Error searching locations:', error);
+    return [];
+  }
 };
 
 /**

@@ -6,13 +6,14 @@
  * NO API KEY REQUIRED! 🎉
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import {
   getUserLocation,
   getCityFromCoordinates,
   calculateDistance,
   getOrderLimit,
   isDeliveryAvailable,
+  isDeliveryAvailableByDistance,
   RESTAURANT_COORDS,
   OrderLimitRule
 } from '@/lib/deliveryZoneUtils';
@@ -25,6 +26,7 @@ export interface DeliveryZoneResult {
   deliveryAllowed: boolean;
   errorMessage: string | null;
   loading: boolean;
+  hasLocation: boolean;
 }
 
 interface UseDeliveryZoneOptions {
@@ -41,8 +43,70 @@ export function useDeliveryZone(options: UseDeliveryZoneOptions = {}) {
     orderRule: null,
     deliveryAllowed: false,
     errorMessage: null,
-    loading: false
+    loading: false,
+    hasLocation: false
   });
+
+  // Check for saved location data on mount
+  useEffect(() => {
+    try {
+      const savedLocation = localStorage.getItem('panngrill-location');
+      console.log('useDeliveryZone: Checking saved location:', savedLocation);
+      
+      if (savedLocation) {
+        const locationData = JSON.parse(savedLocation);
+        console.log('useDeliveryZone: Parsed location data:', locationData);
+        
+        if (locationData) {
+          if (locationData.skipped) {
+            // User skipped location - allow delivery without restrictions
+            setResult({
+              userLocation: null,
+              cityName: null,
+              distanceKm: null,
+              orderRule: { 
+                minDistance: 0, 
+                maxDistance: Infinity, 
+                minOrder: locationData.minOrder || 0, 
+                message: locationData.message || 'No minimum order required',
+                emoji: '✅'
+              },
+              deliveryAllowed: locationData.deliveryAllowed || true,
+              errorMessage: null,
+              loading: false,
+              hasLocation: locationData.hasLocation || true
+            });
+          } else if (locationData.hasLocation) {
+            // User provided location (new format from LocationProvider)
+            setResult({
+              userLocation: locationData.lat && locationData.lng ? { lat: locationData.lat, lng: locationData.lng } : null,
+              cityName: locationData.name || null,
+              distanceKm: locationData.distanceKm || null,
+              orderRule: locationData.orderRule || { minOrder: locationData.minOrder || 0, message: locationData.message || 'No minimum order required' },
+              deliveryAllowed: locationData.deliveryAllowed || locationData.allowed || false,
+              errorMessage: null,
+              loading: false,
+              hasLocation: locationData.hasLocation || true
+            });
+          } else if (locationData.lat && locationData.lng) {
+            // User provided location (old format)
+            setResult({
+              userLocation: { lat: locationData.lat, lng: locationData.lng },
+              cityName: locationData.name,
+              distanceKm: locationData.distanceKm,
+              orderRule: locationData.orderRule,
+              deliveryAllowed: locationData.deliveryAllowed,
+              errorMessage: null,
+              loading: false,
+              hasLocation: true
+            });
+          }
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to load saved location:', error);
+    }
+  }, []);
 
   /**
    * Detect user location and calculate delivery zone (FREE VERSION)
@@ -54,37 +118,54 @@ export function useDeliveryZone(options: UseDeliveryZoneOptions = {}) {
       // Step 1: Get user location
       const userCoords = await getUserLocation();
 
-      // Step 2: Get city name using FREE OpenStreetMap Nominatim API
-      let cityName: string | null = null;
-
-      cityName = await getCityFromCoordinates(userCoords.lat, userCoords.lng);
-
-      // Check if delivery is available in this city
-      const deliveryAllowed = isDeliveryAvailable(cityName);
-
-      if (!deliveryAllowed) {
-        setResult({
-          userLocation: userCoords,
-          cityName,
-          distanceKm: null,
-          orderRule: null,
-          deliveryAllowed: false,
-          errorMessage: "Order can't be placed. We are not delivering at your location.",
-          loading: false
-        });
-        return;
-      }
-
-      // Step 3: Calculate distance using FREE Haversine formula
+      // Step 2: Calculate distance using FREE Haversine formula
       const distanceKm = calculateDistance(
         userCoords.lat,
         userCoords.lng
       );
 
-      // Step 4: Get order rule
+      // Step 3: Check distance-based delivery availability
+      const distanceDeliveryAllowed = isDeliveryAvailableByDistance(distanceKm);
+
+      if (!distanceDeliveryAllowed) {
+        setResult({
+          userLocation: userCoords,
+          cityName: null,
+          distanceKm,
+          orderRule: null,
+          deliveryAllowed: false,
+          errorMessage: `Delivery not available — ${distanceKm.toFixed(2)} km is outside our delivery area (max 10 km).`,
+          loading: false,
+          hasLocation: true
+        });
+        return;
+      }
+
+      // Step 4: Get city name using FREE OpenStreetMap Nominatim API
+      let cityName: string | null = null;
+      cityName = await getCityFromCoordinates(userCoords.lat, userCoords.lng);
+
+      // Step 5: Check if delivery is available in this city
+      const cityDeliveryAllowed = isDeliveryAvailable(cityName);
+
+      if (!cityDeliveryAllowed) {
+        setResult({
+          userLocation: userCoords,
+          cityName,
+          distanceKm,
+          orderRule: null,
+          deliveryAllowed: false,
+          errorMessage: "Order can't be placed. We are not delivering at your location.",
+          loading: false,
+          hasLocation: true
+        });
+        return;
+      }
+
+      // Step 6: Get order rule
       const orderRule = getOrderLimit(distanceKm);
 
-      // Step 5: Update state
+      // Step 7: Update state
       setResult({
         userLocation: userCoords,
         cityName,
@@ -92,7 +173,8 @@ export function useDeliveryZone(options: UseDeliveryZoneOptions = {}) {
         orderRule,
         deliveryAllowed: true,
         errorMessage: null,
-        loading: false
+        loading: false,
+        hasLocation: true
       });
 
       // Return result for immediate use
@@ -129,7 +211,8 @@ export function useDeliveryZone(options: UseDeliveryZoneOptions = {}) {
       orderRule: null,
       deliveryAllowed: false,
       errorMessage: null,
-      loading: false
+      loading: false,
+      hasLocation: false
     });
   }, []);
 

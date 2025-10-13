@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { CartItem } from '@/types';
 import { showToast, calculateTotal, getTotalItems } from '@/lib/cartUtils';
+import { isDeliveryAvailableByDistance, isDeliveryAvailable } from '@/lib/deliveryZoneUtils';
 
 interface CartContextType {
   cartItems: CartItem[];
@@ -14,6 +15,8 @@ interface CartContextType {
   clearCart: () => void;
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
+  setDeliveryZone: (zone: { distanceKm: number; cityName: string | null } | null) => void;
+  deliveryZone: { distanceKm: number; cityName: string | null } | null;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -21,6 +24,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [deliveryZone, setDeliveryZone] = useState<{ distanceKm: number; cityName: string | null } | null>(null);
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -49,6 +53,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [cartItems]);
 
   const addToCart = (item: Omit<CartItem, 'quantity'>) => {
+    // Check if delivery zone is set and valid
+    if (deliveryZone) {
+      const distanceDeliveryAllowed = isDeliveryAvailableByDistance(deliveryZone.distanceKm);
+      const cityDeliveryAllowed = isDeliveryAvailable(deliveryZone.cityName);
+      
+      if (!distanceDeliveryAllowed || !cityDeliveryAllowed) {
+        showToast('Cannot add items to cart. Delivery is not available at your location.', 'error');
+        return;
+      }
+    }
+
     setCartItems((prev) => {
       const existingItem = prev.find(
         (cartItem) => cartItem.id === item.id && cartItem.size === item.size
@@ -108,6 +123,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         clearCart,
         isCartOpen,
         setIsCartOpen,
+        setDeliveryZone,
+        deliveryZone,
       }}
     >
       {children}

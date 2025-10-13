@@ -46,7 +46,7 @@ export default function Navbar() {
     { id: '/', label: 'Home' },
     { id: '/about', label: 'About' },
     { id: '/menu', label: 'Menu' },
-    { id: '/gallery', label: 'Gallery' },
+    // { id: '/gallery', label: 'Gallery' },
     { id: '/contact', label: 'Contact' },
   ];
 

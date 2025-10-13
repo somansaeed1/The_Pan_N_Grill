@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { CartItem } from '@/types';
 import { showToast } from '@/lib/cartUtils';
 import { useCart } from '@/components/Cart/CartProvider';
+import { useDeliveryZone } from '@/hooks/useDeliveryZone';
 
 // Destination WhatsApp number in international format without plus sign.
 // Keep only digits here; code will ensure proper prefix when needed.
@@ -13,7 +14,7 @@ const WHATSAPP_NUMBER = '923456500649';
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { clearCart } = useCart();
+  const { clearCart, setDeliveryZone } = useCart();
   const [cartData, setCartData] = useState<{ items: CartItem[]; total: number } | null>(null);
   const [formData, setFormData] = useState({
     fullName: '',
@@ -28,6 +29,30 @@ export default function CheckoutPage() {
     phone: '',
     address: '',
   });
+
+  // Location validation
+  const {
+    distanceKm,
+    orderRule,
+    deliveryAllowed,
+    loading: locationLoading,
+    errorMessage: locationError,
+    cityName,
+    hasLocation,
+    validateOrder
+  } = useDeliveryZone();
+
+  // Debug logging
+  useEffect(() => {
+    console.log('Checkout: Location state:', {
+      hasLocation,
+      deliveryAllowed,
+      orderRule,
+      distanceKm,
+      cityName
+    });
+  }, [hasLocation, deliveryAllowed, orderRule, distanceKm, cityName]);
+
 
   useEffect(() => {
     try {
@@ -57,6 +82,7 @@ export default function CheckoutPage() {
       console.error('Failed to parse checkoutData', e);
     }
   }, []);
+
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -94,6 +120,20 @@ export default function CheckoutPage() {
     if (formData.method === 'Delivery' && !formData.deliveryAddress.trim()) {
       newErrors.address = 'Delivery address is required for Delivery method.';
       valid = false;
+    }
+
+    // Location validation for delivery orders
+    if (formData.method === 'Delivery') {
+      if (!deliveryAllowed) {
+        newErrors.address = 'Delivery is not available to your location. Please check your delivery zone or choose pickup.';
+        valid = false;
+      } else if (cartData && orderRule) {
+        const orderValidation = validateOrder(cartData.total);
+        if (!orderValidation.valid) {
+          newErrors.address = orderValidation.message;
+          valid = false;
+        }
+      }
     }
 
     setErrors(newErrors);
@@ -200,6 +240,8 @@ export default function CheckoutPage() {
           {/* Form column */}
           <div className="lg:col-span-2 bg-white border rounded-lg shadow-sm p-6 h-full flex flex-col">
             <h2 className="text-2xl font-heading font-semibold mb-4">Checkout</h2>
+            
+
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
               <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
@@ -327,9 +369,23 @@ export default function CheckoutPage() {
                     }, 100);
                   }
                 }}
-                className="block w-full text-center bg-white border-2 border-[#25D366] text-[#25D366] hover:bg-[#25D366] hover:text-white py-3 rounded-lg font-semibold transition-colors"
+                className={`block w-full text-center py-3 rounded-lg font-semibold transition-colors ${
+                  formData.method === 'Delivery' && (!hasLocation || !deliveryAllowed || (orderRule && orderRule.minOrder > 0 && cartData.total < orderRule.minOrder))
+                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    : 'bg-white border-2 border-[#25D366] text-[#25D366] hover:bg-[#25D366] hover:text-white'
+                }`}
+                style={{
+                  pointerEvents: formData.method === 'Delivery' && (!hasLocation || !deliveryAllowed || (orderRule && orderRule.minOrder > 0 && cartData.total < orderRule.minOrder)) ? 'none' : 'auto'
+                }}
               >
-                Place Order via WhatsApp
+                {formData.method === 'Delivery' && !hasLocation
+                  ? 'Please set your delivery location'
+                  : formData.method === 'Delivery' && !deliveryAllowed
+                  ? 'Delivery Not Available'
+                  : formData.method === 'Delivery' && orderRule && orderRule.minOrder > 0 && cartData.total < orderRule.minOrder
+                  ? `Add Rs. ${orderRule.minOrder - cartData.total} More`
+                  : 'Place Order via WhatsApp'
+                }
               </a>
               )}
               

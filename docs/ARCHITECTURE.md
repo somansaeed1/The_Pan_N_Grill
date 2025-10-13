@@ -1,4 +1,4 @@
-# 🗺️ Delivery Zone Feature - Architecture Overview
+# 🗺️ Manual Location Search Module - Architecture Overview
 
 ## 📊 System Architecture Diagram
 
@@ -8,24 +8,34 @@
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                   │
 │  ┌─────────────────────────────────────────────────────────┐   │
-│  │         CheckDeliveryZone Component                      │   │
-│  │         (components/CheckDeliveryZone.tsx)               │   │
+│  │         LocationSearch Component                         │   │
+│  │         (components/LocationSearch.tsx)                  │   │
 │  │                                                           │   │
-│  │  • Detect Location Button                                │   │
-│  │  • Loading States                                        │   │
-│  │  • Results Display                                       │   │
-│  │  • Interactive Map                                       │   │
-│  │  • Error Messages                                        │   │
+│  │  • Manual location search input                          │   │
+│  │  • Search results dropdown                               │   │
+│  │  • Location selection                                    │   │
+│  │  • Debounced search                                      │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │                            │                                     │
 │                            ▼                                     │
 │  ┌─────────────────────────────────────────────────────────┐   │
-│  │         useDeliveryZone Hook (Optional)                  │   │
+│  │         LocationModal Component                          │   │
+│  │         (components/LocationModal.tsx)                   │   │
+│  │                                                           │   │
+│  │  • Manual location search only                           │   │
+│  │  • No auto-detection                                     │   │
+│  │  • Delivery zone validation                              │   │
+│  │  • Location selection confirmation                       │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                            │                                     │
+│                            ▼                                     │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │         useDeliveryZone Hook                             │   │
 │  │         (hooks/useDeliveryZone.ts)                       │   │
 │  │                                                           │   │
 │  │  • State Management                                      │   │
-│  │  • Location Detection                                    │   │
 │  │  • Order Validation                                      │   │
+│  │  • Distance Calculation                                  │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │                            │                                     │
 └────────────────────────────┼─────────────────────────────────────┘
@@ -47,23 +57,16 @@
 │  │  └──────────────────────────────────────────────────┘   │   │
 │  │                                                           │   │
 │  │  ┌──────────────────────────────────────────────────┐   │   │
-│  │  │  getCityFromCoordinates(lat, lng, apiKey)        │   │   │
+│  │  │  getCityFromCoordinates(lat, lng)                │   │   │
 │  │  │  ↓                                                │   │   │
-│  │  │  Google Geocoding API                            │   │   │
+│  │  │  OpenStreetMap Nominatim API (FREE!)             │   │   │
 │  │  │  → Returns: "Jhang" or "Faisalabad" etc.         │   │   │
 │  │  └──────────────────────────────────────────────────┘   │   │
 │  │                                                           │   │
 │  │  ┌──────────────────────────────────────────────────┐   │   │
-│  │  │  calculateDistanceWithGoogle(lat, lng, apiKey)   │   │   │
+│  │  │  calculateDistance(lat, lng)                     │   │   │
 │  │  │  ↓                                                │   │   │
-│  │  │  Google Distance Matrix API                       │   │   │
-│  │  │  → Returns: 4.5 (km) - Road Distance             │   │   │
-│  │  └──────────────────────────────────────────────────┘   │   │
-│  │                                                           │   │
-│  │  ┌──────────────────────────────────────────────────┐   │   │
-│  │  │  calculateHaversineDistance(lat1, lng1, ...)     │   │   │
-│  │  │  ↓                                                │   │   │
-│  │  │  Mathematical Formula (No API)                    │   │   │
+│  │  │  Haversine Formula (No API)                      │   │   │
 │  │  │  → Returns: 4.2 (km) - Direct Distance           │   │   │
 │  │  └──────────────────────────────────────────────────┘   │   │
 │  │                                                           │   │
@@ -71,9 +74,10 @@
 │  │  │  getOrderLimit(distanceKm)                        │   │   │
 │  │  │  ↓                                                │   │   │
 │  │  │  Rule Engine                                      │   │   │
-│  │  │  → 0-2km: Rs. 0                                   │   │   │
-│  │  │  → 3-5km: Rs. 1000                                │   │   │
-│  │  │  → >5km: Rs. 1500                                 │   │   │
+│  │  │  → 0-3km: Rs. 0                                   │   │   │
+│  │  │  → 3-5km: Rs. 0                                   │   │   │
+│  │  │  → 5-10km: Rs. 2000                               │   │   │
+│  │  │  → >10km: Not available                           │   │   │
 │  │  └──────────────────────────────────────────────────┘   │   │
 │  │                                                           │   │
 │  │  ┌──────────────────────────────────────────────────┐   │   │
@@ -94,11 +98,11 @@
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                   │
 │  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────┐  │
-│  │ Browser          │  │ Google           │  │ Google       │  │
-│  │ Geolocation      │  │ Geocoding        │  │ Distance     │  │
-│  │ API              │  │ API              │  │ Matrix API   │  │
+│  │ Browser          │  │ OpenStreetMap    │  │ Leaflet.js   │  │
+│  │ Geolocation      │  │ Nominatim API    │  │ Map Library  │  │
+│  │ API              │  │ (Reverse Geo)    │  │ (Display)    │  │
 │  │                  │  │                  │  │              │  │
-│  │ Free             │  │ 40k free/month   │  │ 40k free/mo  │  │
+│  │ Free             │  │ FREE (No limits) │  │ FREE         │  │
 │  └──────────────────┘  └──────────────────┘  └──────────────┘  │
 │                                                                   │
 └───────────────────────────────────────────────────────────────────┘
@@ -110,50 +114,53 @@
 
 ```
 1. User Action
-   └─> Click "Detect My Location" button
+   └─> Type location in search input (e.g., "jhang")
        │
        ▼
-2. Location Detection
-   └─> getUserLocation()
-       └─> Browser Geolocation API
-           └─> User Approves
-               └─> Returns: { lat: 31.278, lng: 72.321 }
+2. Location Search (FREE - OpenStreetMap)
+   └─> searchLocations(query)
+       └─> OpenStreetMap Nominatim API
+           └─> Returns: Array of location results
                │
                ▼
-3. City Detection (Optional - if API key available)
-   └─> getCityFromCoordinates(lat, lng, apiKey)
-       └─> Google Geocoding API
+3. User Selection
+   └─> User clicks on location from dropdown
+       └─> Returns: { lat: 31.278, lng: 72.321, display_name: "Jhang Sadar" }
+           │
+           ▼
+4. Distance Calculation (FREE - Haversine)
+   └─> calculateDistance(lat, lng)
+       └─> Haversine Formula (Pure Math)
+           └─> Returns 4.2 km
+               │
+               ▼
+5. City Detection (FREE - OpenStreetMap)
+   └─> getCityFromCoordinates(lat, lng)
+       └─> OpenStreetMap Nominatim API
            └─> Returns: "Jhang"
                │
                ▼
-4. City Validation
+6. City Validation
    └─> isDeliveryAvailable("Jhang")
        └─> "Jhang" === deliveryCity?
            ├─> Yes ✅ Continue
            └─> No ❌ Show error: "Can't deliver to your location"
                │
                ▼
-5. Distance Calculation
-   └─> Try: calculateDistanceWithGoogle(lat, lng, apiKey)
-       ├─> Success: Returns 4.5 km
-       └─> Fail: calculateHaversineDistance(lat, lng, ...)
-           └─> Returns 4.2 km
-               │
-               ▼
-6. Order Limit Determination
-   └─> getOrderLimit(4.5)
+7. Order Limit Determination
+   └─> getOrderLimit(4.2)
        └─> Check rules:
-           ├─> 0-2 km? No
+           ├─> 0-3 km? No
            ├─> 3-5 km? Yes ✅
-           └─> Return: { minOrder: 1000, message: "Min Rs. 1000" }
+           └─> Return: { minOrder: 0, message: "No minimum order" }
                │
                ▼
-7. Display Results
+8. Display Results & Cart Integration
    └─> Show:
        ├─> City: "Jhang" ✅
-       ├─> Distance: 4.5 km ✅
-       ├─> Min Order: Rs. 1000 ✅
-       └─> Map with markers ✅
+       ├─> Distance: 4.2 km ✅
+       ├─> Min Order: Rs. 0 ✅
+       └─> Enable/Disable cart based on delivery availability ✅
 ```
 
 ## 🏗️ Component Hierarchy
@@ -173,10 +180,11 @@ App Root
 │    │    │         │
 │    │    │         ├─── Header Section
 │    │    │         │
-│    │    │         ├─── Action Buttons
-│    │    │         │    ├─── Detect Location Button
-│    │    │         │    ├─── Reset Button
-│    │    │         │    └─── Toggle Google API Checkbox
+│    │    │         ├─── Manual Location Search
+│    │    │         │    ├─── LocationSearch Component
+│    │    │         │    ├─── Search Input
+│    │    │         │    ├─── Results Dropdown
+│    │    │         │    └─── Location Selection
 │    │    │         │
 │    │    │         ├─── Results Display
 │    │    │         │    ├─── Error Message (if any)
@@ -185,7 +193,7 @@ App Root
 │    │    │         │         ├─── Distance Card
 │    │    │         │         └─── Order Limit Card
 │    │    │         │
-│    │    │         ├─── Google Map
+│    │    │         ├─── Leaflet Map (OpenStreetMap)
 │    │    │         │    ├─── Restaurant Marker (🍽️)
 │    │    │         │    ├─── User Marker (📍)
 │    │    │         │    └─── Polyline (connecting line)
@@ -193,46 +201,67 @@ App Root
 │    │    │         └─── Info Section
 │    │    │              └─── Delivery Rules List
 │    │    │
+│    │    ├─── LocationModal Component ⭐
+│    │    │    │
+│    │    │    ├─── Manual location search only
+│    │    │    ├─── LocationSearch Component
+│    │    │    ├─── No auto-detection
+│    │    │    └─── Delivery zone validation
+│    │    │
 │    │    └─── /checkout/page.tsx (Your Integration)
+│    │         │
+│    │         ├─── LocationSearch Component ⭐
+│    │         │    ├─── Manual location search
+│    │         │    ├─── Search results dropdown
+│    │         │    └─── Location selection
 │    │         │
 │    │         └─── useDeliveryZone Hook ⭐
 │    │              │
-│    │              ├─── Location Detection Logic
 │    │              ├─── Order Validation
+│    │              ├─── Distance Calculation
 │    │              └─── State Management
 │    │
 │    └─── Footer
 │
 └─── Providers
-     ├─── CartProvider
-     └─── LocationProvider (existing)
+     ├─── CartProvider (with delivery zone integration)
+     └─── (LocationProvider removed - no auto-detection)
 ```
 
 ## 📦 File Dependencies
 
 ```
-CheckDeliveryZone.tsx
+LocationSearch.tsx
 ├─── Imports:
-│    ├─── React (useState, useCallback, useEffect)
-│    ├─── @react-google-maps/api
-│    │    ├─── useLoadScript
-│    │    ├─── GoogleMap
-│    │    ├─── Marker
-│    │    └─── Polyline
+│    ├─── React (useState, useCallback, useEffect, useRef)
+│    │
+│    └─── lib/deliveryZoneUtils.ts
+│         ├─── searchLocations
+│         ├─── calculateDistance
+│         ├─── getOrderLimit
+│         ├─── isDeliveryAvailable
+│         └─── getCityFromCoordinates
+│
+└─── Dependencies:
+     └─── OpenStreetMap Nominatim API (FREE)
+
+CheckDeliveryZone.jsx
+├─── Imports:
+│    ├─── React (useState, useCallback)
+│    ├─── dynamic (Next.js)
+│    │    └─── LeafletMap (dynamic import)
 │    │
 │    └─── lib/deliveryZoneUtils.ts
 │         ├─── RESTAURANT_COORDS
 │         ├─── DELIVERY_CITY
-│         ├─── calculateHaversineDistance
+│         ├─── calculateDistance
 │         ├─── getCityFromCoordinates
-│         ├─── calculateDistanceWithGoogle
 │         ├─── getOrderLimit
 │         ├─── isDeliveryAvailable
-│         ├─── getUserLocation
 │         └─── OrderLimitRule (type)
 │
-└─── Environment Variables:
-     └─── process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+└─── Dependencies:
+     └─── leaflet (map library)
 ```
 
 ```
@@ -243,8 +272,7 @@ useDeliveryZone.ts (Hook)
 │    └─── lib/deliveryZoneUtils.ts
 │         ├─── getUserLocation
 │         ├─── getCityFromCoordinates
-│         ├─── calculateHaversineDistance
-│         ├─── calculateDistanceWithGoogle
+│         ├─── calculateDistance
 │         ├─── getOrderLimit
 │         ├─── isDeliveryAvailable
 │         └─── RESTAURANT_COORDS
@@ -300,31 +328,25 @@ Checkout Flow
 ## 🔐 Security Flow
 
 ```
-API Key Management
+No API Keys Required! 🎉
 │
-├─── Configuration
-│    └─── .env.local (local)
-│         └─── NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=AIza...
-│              │
-│              ├─> ✅ Not committed to Git (.gitignore)
-│              └─> ✅ Environment variables only
+├─── OpenStreetMap Nominatim
+│    └─── FREE public API
+│         ├─> No authentication required
+│         ├─> No rate limits for reasonable usage
+│         └─> No billing or quotas
 │
-├─── Google Cloud Console
-│    │
-│    ├─── API Key Restrictions
-│    │    ├─> HTTP Referrers: localhost:3000/*, yourdomain.com/*
-│    │    └─> API Restrictions: Only Maps, Geocoding, Distance Matrix
-│    │
-│    └─── Billing & Quotas
-│         ├─> Free tier: $200/month credit
-│         ├─> Set quotas to prevent abuse
-│         └─> Set up billing alerts
+├─── Browser Geolocation
+│    └─── User permission required
+│         ├─> Secure HTTPS only
+│         ├─> User controls access
+│         └─> No data sent to external servers
 │
-└─── Client-Side Usage
-     └─── NEXT_PUBLIC_* prefix
-          ├─> Safe for client-side exposure
-          ├─> Protected by domain restrictions
-          └─> Limited by API restrictions
+└─── Leaflet.js Maps
+     └─── Open-source library
+          ├─> No API keys needed
+          ├─> Uses OpenStreetMap tiles
+          └─> Client-side only
 ```
 
 ## 📊 Performance Optimization
@@ -336,10 +358,10 @@ Performance Strategy
 │    └─> Map loads only when location detected
 │         └─> Saves initial page load time
 │
-├─── Conditional API Calls
-│    ├─> Geocoding: Only if API key exists
-│    ├─> Distance Matrix: Optional (toggle)
-│    └─> Fallback: Haversine (no API call)
+├─── FREE API Calls
+│    ├─> OpenStreetMap Nominatim: No rate limits
+│    ├─> Haversine calculation: Pure math (instant)
+│    └─> No API key management needed
 │
 ├─── Single Calls
 │    └─> Each API called once per detection
@@ -416,26 +438,31 @@ Production Environment
 
 ### Key Constants:
 ```typescript
-RESTAURANT_COORDS = { lat: 31.277761, lng: 72.321373 }
+RESTAURANT_COORDS = { lat: 31.2681, lng: 72.3317 }
 DELIVERY_CITY = "Jhang"
-ORDER_LIMIT_RULES = [0-2km: Rs.0, 3-5km: Rs.1000, >5km: Rs.1500]
+ORDER_LIMIT_RULES = [0-3km: Rs.0, 3-5km: Rs.0, 5-10km: Rs.2000, >10km: blocked]
 ```
 
 ### Key Functions:
 ```typescript
-getUserLocation() → { lat, lng }
-getCityFromCoordinates(lat, lng, key) → "Jhang"
-calculateDistance(lat, lng, ...) → 4.5 (km)
-getOrderLimit(distanceKm) → { minOrder: 1000, ... }
+searchLocations(query) → Array<LocationResult>
+getCityFromCoordinates(lat, lng) → "Jhang"
+calculateDistance(lat, lng) → 4.2 (km)
+getOrderLimit(distanceKm) → { minOrder: 0, ... }
 isDeliveryAvailable(city) → true/false
+isDeliveryAvailableByDistance(distanceKm) → true/false
 validateOrderTotal(total, minOrder) → true/false
 ```
 
 ### Key Files:
-- Component: `components/CheckDeliveryZone.tsx`
+- Search Component: `components/LocationSearch.tsx`
+- Component: `components/CheckDeliveryZone.jsx`
+- Modal: `components/LocationModal.tsx`
 - Utilities: `lib/deliveryZoneUtils.ts`
 - Hook: `hooks/useDeliveryZone.ts`
+- Map: `components/LeafletMap.jsx`
 - Demo: `app/delivery-zone/page.tsx`
+- Cart Integration: `components/Cart/CartProvider.tsx`
 
 ---
 
@@ -443,7 +470,6 @@ validateOrderTotal(total, minOrder) → true/false
 - Architecture: This file
 - Quick Start: `QUICK_START.md`
 - Full Docs: `DELIVERY_ZONE_README.md`
-- Setup Guide: `GOOGLE_MAPS_SETUP.md`
 - Checklist: `CHECKLIST.md`
 
 ---

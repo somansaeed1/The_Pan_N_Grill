@@ -15,18 +15,31 @@ export default function LocationProvider() {
   useEffect(() => {
     if (!mounted) return;
 
-    // Check if user has already provided location
-    const savedLocation = localStorage.getItem('panngrill-location');
-    if (!savedLocation) {
-      // Show modal immediately once component is mounted
-      setShowLocationModal(true);
-    }
+    // Always show modal when website loads
+    console.log('LocationProvider: Showing modal on website load');
+    setShowLocationModal(true);
   }, [mounted]);
 
   const handleLocationClose = (decision: DeliveryInfo | null) => {
     setShowLocationModal(false);
     if (decision) {
       console.log('Location decision:', decision);
+      // Save location data to localStorage in the format expected by useDeliveryZone
+      localStorage.setItem('panngrill-location', JSON.stringify({
+        ...decision,
+        hasLocation: true,
+        deliveryAllowed: decision.allowed
+      }));
+    } else {
+      // User skipped - save a "skipped" state
+      localStorage.setItem('panngrill-location', JSON.stringify({
+        skipped: true,
+        allowed: true,
+        minOrder: 0,
+        message: 'Location skipped by user',
+        hasLocation: true,
+        deliveryAllowed: true
+      }));
     }
   };
 

@@ -62,11 +62,11 @@ export default function Footer() {
                   Menu
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/gallery" className="text-gray-300 hover:text-gold-400 transition-colors">
                   Gallery
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link href="/contact" className="text-gray-300 hover:text-gold-400 transition-colors">
                   Contact Us
