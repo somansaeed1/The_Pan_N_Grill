@@ -4,218 +4,218 @@ export const menuData: MenuData = {
   'special-pizza': {
     name: 'Special Pizza',
     items: [
-      { id: 'family-pizza', name: 'Family Pizza', price: 2000, sizes: null, image: '/images/pizzas/family-pizza.jpg' },
-      { id: 'xlarge-pizza', name: 'X-Large Pizza', price: 1750, sizes: null, image: '/images/pizzas/xlarge-pizza.jpg' },
-      { id: 'royal-kabab-crust', name: 'Royal Kabab Crust', price: null, sizes: { S: 600, M: 1100, L: 1650 }, image: '/images/pizzas/royal-kabab-crust.jpg' },
-      { id: 'pan-n-grill-special', name: 'Pan N Grill Special', price: null, sizes: { S: 600, M: 1100, L: 1650 }, image: '/images/pizzas/pan-n-grill-special.jpg' },
-      { id: 'kabab-crust-pizza', name: 'Kabab Crust Pizza', price: null, sizes: { S: 600, M: 1100, L: 1650 }, image: '/images/pizzas/kabab-crust-pizza.jpg' },
-      { id: 'malaie-boti-pizza', name: 'Malaie Boti Pizza', price: null, sizes: { S: 600, M: 1100, L: 1650 }, image: '/images/pizzas/malaie-boti-pizza.jpg' },
-      { id: 'mughlai-pizza', name: 'Mughlai Pizza', price: null, sizes: { S: 600, M: 1100, L: 1650 }, image: '/images/pizzas/mughlai-pizza.jpg' },
-      { id: 'chicken-tandoori-pizza', name: 'Chicken Tandoori Pizza', price: null, sizes: { S: 600, M: 1100, L: 1650 }, image: '/images/pizzas/chicken-tandoori-pizza.jpg' },
-      { id: 'afghani-pizza', name: 'Afghani Pizza', price: null, sizes: { S: 600, M: 1100, L: 1650 }, image: '/images/pizzas/afghani-pizza.jpg' },
-      { id: 'kabab-stuff-pizza', name: 'Kabab Stuff Pizza', price: null, sizes: { S: 600, M: 1100, L: 1650 }, image: '/images/pizzas/kabab-stuff-pizza.jpg' }
+      { id: 'family-pizza', name: 'Family Pizza', price: 2000, sizes: null, image: '/images/pizzas/family-pizza.jpg', description: 'Extra large pizza perfect for sharing with the whole family, loaded with premium toppings and our signature blend of cheeses.' },
+      { id: 'xlarge-pizza', name: 'X-Large Pizza', price: 1750, sizes: null, image: '/images/pizzas/xlarge-pizza.jpg', description: 'Generously sized pizza with a crispy golden crust, topped with fresh ingredients and melted mozzarella cheese.' },
+      { id: 'royal-kabab-crust', name: 'Royal Kabab Crust', price: null, sizes: { S: 600, M: 1100, L: 1650 }, image: '/images/pizzas/royal-kabab-crust.jpg', description: 'Premium pizza with a unique kabab-stuffed crust, featuring tender spiced meat wrapped in our signature dough.' },
+      { id: 'pan-n-grill-special', name: 'Pan N Grill Special', price: null, sizes: { S: 600, M: 1100, L: 1650 }, image: '/images/pizzas/pan-n-grill-special.jpg', description: 'Our signature pizza featuring a perfect blend of grilled chicken, fresh vegetables, and aromatic spices on a crispy base.' },
+      { id: 'kabab-crust-pizza', name: 'Kabab Crust Pizza', price: null, sizes: { S: 600, M: 1100, L: 1650 }, image: '/images/pizzas/kabab-crust-pizza.jpg', description: 'Innovative pizza with kabab meat baked into the crust edges, creating a delicious surprise with every bite.' },
+      { id: 'malaie-boti-pizza', name: 'Malaie Boti Pizza', price: null, sizes: { S: 600, M: 1100, L: 1650 }, image: '/images/pizzas/malaie-boti-pizza.jpg', description: 'Rich and creamy pizza topped with tender malai boti pieces, fresh cream, and aromatic herbs for an indulgent experience.' },
+      { id: 'mughlai-pizza', name: 'Mughlai Pizza', price: null, sizes: { S: 600, M: 1100, L: 1650 }, image: '/images/pizzas/mughlai-pizza.jpg', description: 'Royal-inspired pizza with rich Mughlai flavors, featuring tender meat, nuts, and aromatic spices on a golden crust.' },
+      { id: 'chicken-tandoori-pizza', name: 'Chicken Tandoori Pizza', price: null, sizes: { S: 600, M: 1100, L: 1650 }, image: '/images/pizzas/chicken-tandoori-pizza.jpg', description: 'Authentic tandoori chicken pieces on a crispy pizza base, marinated with traditional spices and yogurt.' },
+      { id: 'afghani-pizza', name: 'Afghani Pizza', price: null, sizes: { S: 600, M: 1100, L: 1650 }, image: '/images/pizzas/afghani-pizza.jpg', description: 'Bold and flavorful pizza featuring Afghani-style marinated meat with a perfect blend of spices and fresh herbs.' },
+      { id: 'kabab-stuff-pizza', name: 'Kabab Stuff Pizza', price: null, sizes: { S: 600, M: 1100, L: 1650 }, image: '/images/pizzas/kabab-stuff-pizza.jpg', description: 'Stuffed pizza with generous portions of spiced kabab meat inside the crust, topped with cheese and fresh vegetables.' }
     ]
   },
   'regular-pizza': {
     name: 'Regular Pizza',
     items: [
-      { id: 'tikka-pizza', name: 'Tikka Pizza', price: null, sizes: { S: 500, M: 1000, L: 1500 }, image: '/images/pizzas/tikka-pizza.jpg' },
-      { id: 'fajita-pizza', name: 'Fajita Pizza', price: null, sizes: { S: 500, M: 1000, L: 1500 }, image: '/images/pizzas/fajita-pizza.jpg' },
-      { id: 'supreme-pizza', name: 'Supreme Pizza', price: null, sizes: { S: 500, M: 1000, L: 1500 }, image: '/images/pizzas/supreme-pizza.jpg' },
-      { id: 'bar-bq-pizza', name: 'Bar B-Q Pizza', price: null, sizes: { S: 500, M: 1000, L: 1500 }, image: '/images/pizzas/bar-bq-pizza.jpg' },
-      { id: 'achari-pizza', name: 'Achari Pizza', price: null, sizes: { S: 500, M: 1000, L: 1500 }, image: '/images/pizzas/achari-pizza.jpg' },
-      { id: 'italian-pizza', name: 'Italian Pizza', price: null, sizes: { S: 500, M: 1000, L: 1500 }, image: '/images/pizzas/italian-pizza.jpg' },
-      { id: 'hot-n-spicy-pizza', name: 'Hot N Spicy Pizza', price: null, sizes: { S: 500, M: 1000, L: 1500 }, image: '/images/pizzas/hot-n-spicy-pizza.jpg' },
-      { id: 'multi-flavour-pizza', name: 'Multi Flavour Pizza', price: null, sizes: { S: 600, M: 1100, L: 1650 }, image: '/images/pizzas/multi-flavour-pizza.jpg' }
+      { id: 'tikka-pizza', name: 'Tikka Pizza', price: null, sizes: { S: 500, M: 1000, L: 1500 }, image: '/images/pizzas/tikka-pizza.jpg', description: 'Classic tikka pizza with tender marinated chicken pieces, onions, and bell peppers on a crispy base.' },
+      { id: 'fajita-pizza', name: 'Fajita Pizza', price: null, sizes: { S: 500, M: 1000, L: 1500 }, image: '/images/pizzas/fajita-pizza.jpg', description: 'Mexican-inspired pizza with seasoned chicken, colorful bell peppers, onions, and melted cheese.' },
+      { id: 'supreme-pizza', name: 'Supreme Pizza', price: null, sizes: { S: 500, M: 1000, L: 1500 }, image: '/images/pizzas/supreme-pizza.jpg', description: 'Loaded supreme pizza with pepperoni, sausage, mushrooms, bell peppers, and onions for the ultimate flavor experience.' },
+      { id: 'bar-bq-pizza', name: 'Bar B-Q Pizza', price: null, sizes: { S: 500, M: 1000, L: 1500 }, image: '/images/pizzas/bar-bq-pizza.jpg', description: 'Smoky barbeque pizza with grilled chicken, tangy BBQ sauce, red onions, and cilantro on a crispy crust.' },
+      { id: 'achari-pizza', name: 'Achari Pizza', price: null, sizes: { S: 500, M: 1000, L: 1500 }, image: '/images/pizzas/achari-pizza.jpg', description: 'Tangy and spicy achari pizza featuring pickled chicken with traditional Pakistani pickle spices and fresh herbs.' },
+      { id: 'italian-pizza', name: 'Italian Pizza', price: null, sizes: { S: 500, M: 1000, L: 1500 }, image: '/images/pizzas/italian-pizza.jpg', description: 'Authentic Italian-style pizza with fresh basil, mozzarella, tomato sauce, and premium Italian seasonings.' },
+      { id: 'hot-n-spicy-pizza', name: 'Hot N Spicy Pizza', price: null, sizes: { S: 500, M: 1000, L: 1500 }, image: '/images/pizzas/hot-n-spicy-pizza.jpg', description: 'Fiery hot pizza with spicy chicken, jalapeños, and our signature hot sauce for those who love bold flavors.' },
+      { id: 'multi-flavour-pizza', name: 'Multi Flavour Pizza', price: null, sizes: { S: 600, M: 1100, L: 1650 }, image: '/images/pizzas/multi-flavour-pizza.jpg', description: 'Four different flavors in one pizza - tikka, fajita, BBQ, and supreme - perfect for sharing and trying multiple tastes.' }
     ]
   },
   'special-shawarmas': {
     name: 'Special Shawarmas',
     items: [
-      { id: 'chicken-shawarma', name: 'Chicken Shawarma', price: 200, sizes: null, image: '/images/shawarmas/chicken-shawarma.jpg' },
-      { id: 'achari-shawarma', name: 'Achari Shawarma', price: 220, sizes: null, image: '/images/shawarmas/achari-shawarma.jpg' },
-      { id: 'malai-boti-shawarma', name: 'Malai Boti Shawarma', price: 250, sizes: null, image: '/images/shawarmas/malai-boti-shawarma.jpg' },
-      { id: 'zinger-shawarma', name: 'Zinger Shawarma', price: 300, sizes: null, image: '/images/shawarmas/zinger-shawarma.jpg' },
-      { id: 'special-shawarma', name: 'Special Shawarma', price: 250, sizes: null, image: '/images/shawarmas/special-shawarma.jpg' },
-      { id: 'grilled-shawarma', name: 'Grilled Shawarma', price: 300, sizes: null, image: '/images/shawarmas/grilled-shawarma.jpg' },
-      { id: 'chicken-cheese-shawarma', name: 'Chicken Cheese Shawarma', price: 250, sizes: null, image: '/images/shawarmas/chicken-cheese-shawarma.jpg' },
-      { id: 'zinger-cheese-shawarma', name: 'Zinger Cheese Shawarma', price: 350, sizes: null, image: '/images/shawarmas/zinger-cheese-shawarma.jpg' },
-      { id: 'platter-shawarma', name: 'Platter Shawarma', price: 350, sizes: null, image: '/images/shawarmas/platter-shawarma.jpg' },
-      { id: 'slice-cheese', name: 'Slice Cheese', price: 50, sizes: null, image: '/images/shawarmas/slice-cheese.jpg' }
+      { id: 'chicken-shawarma', name: 'Chicken Shawarma', price: 200, sizes: null, image: '/images/shawarmas/chicken-shawarma.jpg', description: 'Tender marinated chicken wrapped in soft pita bread with fresh vegetables, garlic sauce, and pickles.' },
+      { id: 'achari-shawarma', name: 'Achari Shawarma', price: 220, sizes: null, image: '/images/shawarmas/achari-shawarma.jpg', description: 'Spicy achari-marinated chicken with tangy pickle flavors, wrapped in warm pita with fresh salad.' },
+      { id: 'malai-boti-shawarma', name: 'Malai Boti Shawarma', price: 250, sizes: null, image: '/images/shawarmas/malai-boti-shawarma.jpg', description: 'Creamy malai boti pieces with rich cream sauce, wrapped in soft bread with fresh vegetables.' },
+      { id: 'zinger-shawarma', name: 'Zinger Shawarma', price: 300, sizes: null, image: '/images/shawarmas/zinger-shawarma.jpg', description: 'Crispy zinger chicken fillet with spicy mayo, lettuce, and tomatoes in a soft pita wrap.' },
+      { id: 'special-shawarma', name: 'Special Shawarma', price: 250, sizes: null, image: '/images/shawarmas/special-shawarma.jpg', description: 'Our signature shawarma with premium chicken, special sauce, and a perfect blend of fresh ingredients.' },
+      { id: 'grilled-shawarma', name: 'Grilled Shawarma', price: 300, sizes: null, image: '/images/shawarmas/grilled-shawarma.jpg', description: 'Perfectly grilled chicken with smoky flavors, fresh vegetables, and garlic sauce in warm pita bread.' },
+      { id: 'chicken-cheese-shawarma', name: 'Chicken Cheese Shawarma', price: 250, sizes: null, image: '/images/shawarmas/chicken-cheese-shawarma.jpg', description: 'Tender chicken with melted cheese, fresh vegetables, and garlic sauce wrapped in soft pita.' },
+      { id: 'zinger-cheese-shawarma', name: 'Zinger Cheese Shawarma', price: 350, sizes: null, image: '/images/shawarmas/zinger-cheese-shawarma.jpg', description: 'Crispy zinger chicken with extra cheese, spicy mayo, and fresh vegetables in a warm pita wrap.' },
+      { id: 'platter-shawarma', name: 'Platter Shawarma', price: 350, sizes: null, image: '/images/shawarmas/platter-shawarma.jpg', description: 'Generous platter with shawarma meat, fresh salad, garlic sauce, and warm pita bread for sharing.' },
+      { id: 'slice-cheese', name: 'Slice Cheese', price: 50, sizes: null, image: '/images/shawarmas/slice-cheese.jpg', description: 'Extra slice of premium cheese to enhance any shawarma or sandwich with rich, creamy flavor.' }
     ]
   },
   'pratha-roll': {
     name: 'Pratha Roll',
     items: [
-      { id: 'chicken-pratha-roll', name: 'Chicken Pratha Roll', price: 300, sizes: null, image: '/images/rolls/chicken-pratha-roll.jpg' },
-      { id: 'zinger-pratha-roll', name: 'Zinger Pratha Roll', price: 400, sizes: null, image: '/images/rolls/zinger-pratha-roll.jpg' },
-      { id: 'afghani-pratha-roll', name: 'Afghani Pratha Roll', price: 400, sizes: null, image: '/images/rolls/afghani-pratha-roll.jpg' },
-      { id: 'pizza-pratha-roll', name: 'Pizza Pratha Roll', price: 350, sizes: null, image: '/images/rolls/pizza-pratha-roll.jpg' },
-      { id: 'patty-pratha-roll', name: 'Patty Pratha Roll', price: 300, sizes: null, image: '/images/rolls/patty-pratha-roll.png' },
-      { id: 'grill-pratha-roll', name: 'Grill Pratha Roll', price: 350, sizes: null, image: '/images/rolls/grill-pratha-roll.jpg' }
+      { id: 'chicken-pratha-roll', name: 'Chicken Pratha Roll', price: 300, sizes: null, image: '/images/rolls/chicken-pratha-roll.jpg', description: 'Tender chicken wrapped in flaky, buttery paratha with fresh onions, tomatoes, and aromatic spices.' },
+      { id: 'zinger-pratha-roll', name: 'Zinger Pratha Roll', price: 400, sizes: null, image: '/images/rolls/zinger-pratha-roll.jpg', description: 'Crispy zinger chicken fillet wrapped in soft paratha with spicy mayo and fresh vegetables.' },
+      { id: 'afghani-pratha-roll', name: 'Afghani Pratha Roll', price: 400, sizes: null, image: '/images/rolls/afghani-paratha-roll.jpg', description: 'Afghani-style marinated chicken with rich spices wrapped in warm, flaky paratha bread.' },
+      { id: 'pizza-pratha-roll', name: 'Pizza Pratha Roll', price: 350, sizes: null, image: '/images/rolls/pizza-pratha-roll.jpg', description: 'Pizza-inspired roll with chicken, cheese, and pizza sauce wrapped in crispy paratha.' },
+      { id: 'patty-pratha-roll', name: 'Patty Pratha Roll', price: 300, sizes: null, image: '/images/rolls/patty-pratha-roll.png', description: 'Crispy chicken patty with fresh vegetables and tangy sauce wrapped in soft paratha.' },
+      { id: 'grill-pratha-roll', name: 'Grill Pratha Roll', price: 350, sizes: null, image: '/images/rolls/grill-pratha-roll.jpg', description: 'Perfectly grilled chicken with smoky flavors wrapped in warm paratha with fresh salad.' }
     ]
   },
   'chorizo-burger': {
     name: 'Chorizo Burger',
     items: [
-      { id: 'modern-burger', name: 'Modern Burger', price: 450, sizes: null, image: '/images/burgers/modern-burger.jpg' },
-      { id: 'zinger-burger', name: 'Zinger Burger', price: 350, sizes: null, image: '/images/burgers/zinger-burger.jpg' },
-      { id: 'chicken-patty-burger', name: 'Chicken Patty Burger', price: 300, sizes: null, image: '/images/burgers/chicken-patty-burger.jpg' },
-      { id: 'chapli-burger', name: 'Chapli Burger', price: 250, sizes: null, image: '/images/burgers/chapli-burger.jpg' },
-      { id: 'special-kabab-burger', name: 'Special Kabab Burger', price: 400, sizes: null, image: '/images/burgers/special-kabab-burger.jpg' },
-      { id: 'grill-burger', name: 'Grill Burger', price: 320, sizes: null, image: '/images/burgers/grill-burger.jpg' },
-      { id: 'tower-burger', name: 'Tower Burger', price: 450, sizes: null, image: '/images/burgers/tower-burger.jpg' },
-      { id: 'jelo-pino-burger', name: 'Jelo Pino Burger', price: 380, sizes: null, image: '/images/burgers/jelo-pino-burger.jpg' },
-      { id: 'double-decker-cheese-burger', name: 'Double Decker Cheese Burger', price: 500, sizes: null, image: '/images/burgers/double-decker-cheese-burger.jpg' }
+      { id: 'modern-burger', name: 'Modern Burger', price: 450, sizes: null, image: '/images/burgers/modern-burger.jpg', description: 'Contemporary burger with premium beef patty, fresh lettuce, tomatoes, onions, and our signature sauce.' },
+      { id: 'zinger-burger', name: 'Zinger Burger', price: 350, sizes: null, image: '/images/burgers/zinger-burger.jpg', description: 'Crispy zinger chicken fillet with spicy mayo, fresh lettuce, and tomatoes in a soft bun.' },
+      { id: 'chicken-patty-burger', name: 'Chicken Patty Burger', price: 300, sizes: null, image: '/images/burgers/chicken-patty-burger.jpg', description: 'Juicy chicken patty with fresh vegetables, cheese, and tangy sauce in a toasted bun.' },
+      { id: 'chapli-burger', name: 'Chapli Burger', price: 250, sizes: null, image: '/images/burgers/chapli-burger.jpg', description: 'Authentic chapli kebab patty with traditional spices, onions, and fresh herbs in a soft bun.' },
+      { id: 'special-kabab-burger', name: 'Special Kabab Burger', price: 400, sizes: null, image: '/images/burgers/special-kabab-burger.jpg', description: 'Premium kabab patty with aromatic spices, fresh vegetables, and our special sauce.' },
+      { id: 'grill-burger', name: 'Grill Burger', price: 320, sizes: null, image: '/images/burgers/grill-burger.jpg', description: 'Perfectly grilled chicken patty with smoky flavors, cheese, and fresh vegetables.' },
+      { id: 'tower-burger', name: 'Tower Burger', price: 450, sizes: null, image: '/images/burgers/tower-burger.jpg', description: 'Tall burger with multiple layers of meat, cheese, and vegetables for the ultimate indulgence.' },
+      { id: 'jelo-pino-burger', name: 'Jelo Pino Burger', price: 380, sizes: null, image: '/images/burgers/jelo-pino-burger.jpg', description: 'Unique burger with special jelo pino sauce, crispy chicken, and fresh vegetables.' },
+      { id: 'double-decker-cheese-burger', name: 'Double Decker Cheese Burger', price: 500, sizes: null, image: '/images/burgers/double-decker-cheese-burger.jpg', description: 'Double-layered burger with two beef patties, extra cheese, and fresh vegetables for maximum satisfaction.' }
     ]
   },
   'pasta': {
     name: 'Pasta',
     items: [
-      { id: 'malai-botti-pasta', name: 'Malai Botti Pasta', price: 800, sizes: null, image: '/images/malai-botti-pasta.jpg' },
-      { id: 'crunchy-pasta', name: 'Crunchy Pasta', price: 750, sizes: null, image: '/images/crunchy-pasta.jpg' },
-      { id: 'creamy-cheesy-pasta', name: 'Creamy & Cheesy Pasta', price: 700, sizes: null, image: '/images/creamy-cheesy-pasta.jpg' },
-      { id: 'tandoori-pasta', name: 'Tandoori Pasta', price: 700, sizes: null, image: '/images/tandoori-pasta.jpg' },
-      { id: 'hot-spicy-pasta', name: 'Hot & Spicy Pasta', price: 650, sizes: null, image: '/images/hot-spicy-pasta.jpg' }
+      { id: 'malai-botti-pasta', name: 'Malai Botti Pasta', price: 800, sizes: null, image: '/images/malai-botti-pasta.jpg', description: 'Creamy pasta with tender malai boti pieces, rich cream sauce, and aromatic herbs for an indulgent experience.' },
+      { id: 'crunchy-pasta', name: 'Crunchy Pasta', price: 750, sizes: null, image: '/images/crunchy-pasta.jpg', description: 'Al dente pasta with crispy vegetables, nuts, and a perfect blend of textures and flavors.' },
+      { id: 'creamy-cheesy-pasta', name: 'Creamy & Cheesy Pasta', price: 700, sizes: null, image: '/images/creamy-cheesy-pasta.jpg', description: 'Rich and creamy pasta loaded with melted cheese, fresh herbs, and premium ingredients.' },
+      { id: 'tandoori-pasta', name: 'Tandoori Pasta', price: 700, sizes: null, image: '/images/tandoori-pasta.jpg', description: 'Authentic tandoori-flavored pasta with marinated chicken, yogurt, and traditional spices.' },
+      { id: 'hot-spicy-pasta', name: 'Hot & Spicy Pasta', price: 650, sizes: null, image: '/images/hot-spicy-pasta.jpg', description: 'Fiery hot pasta with spicy chicken, jalapeños, and our signature hot sauce for bold flavor lovers.' }
     ]
   },
   'fried-items': {
     name: 'Fried Items',
     items: [
-      { id: 'bake-oven-broast', name: 'Bake Oven Broast', price: 1600, sizes: null, image: '/images/fried/bake-oven-broast.jpg' },
-      { id: 'broast', name: 'Broast', price: null, sizes: { "full": 1600, "half": 800, "quarter": 400 }, image: '/images/fried/broast.jpg' },
-      { id: 'hot-wings', name: 'Hot Wings', price: null, sizes: { "10p": 700, "5p": 350 }, image: '/images/fried/hot-wings.jpg' },
-      { id: 'nuggets', name: 'Nuggets', price: null, sizes: { "10p": 600, "5p": 300 }, image: '/images/fried/nuggets.jpg' },
-      { id: 'chest-piece', name: 'Chest Piece', price: 350, sizes: null, image: '/images/fried/chest-piece.jpg' },
-      { id: 'leg-piece', name: 'Leg Piece', price: 350, sizes: null, image: '/images/fried/leg-piece.jpg' },
-      { id: 'chicken-samosa', name: 'Chicken Samosa', price: 80, sizes: null, image: '/images/fried/chicken-samosa.jpg' },
-      { id: 'chicken-pakora', name: 'Chicken Pakoda (1 kg)', price: 1000, sizes: null, image: '/images/fried/chicken-pakora.jpg' }
+      { id: 'bake-oven-broast', name: 'Bake Oven Broast', price: 1600, sizes: null, image: '/images/fried/bake-oven-broast.jpg', description: 'Whole chicken baked to perfection in our special oven with aromatic spices and herbs.' },
+      { id: 'broast', name: 'Broast', price: null, sizes: { "full": 1600, "half": 800, "quarter": 400 }, image: '/images/fried/broast.jpg', description: 'Crispy fried chicken with our signature spice blend, available in full, half, or quarter portions.' },
+      { id: 'hot-wings', name: 'Hot Wings', price: null, sizes: { "10p": 700, "5p": 350 }, image: '/images/fried/hot-wings.jpg', description: 'Spicy chicken wings with our signature hot sauce, perfectly crispy and flavorful.' },
+      { id: 'nuggets', name: 'Nuggets', price: null, sizes: { "10p": 600, "5p": 300 }, image: '/images/fried/nuggets.jpg', description: 'Crispy chicken nuggets with tender meat inside, perfect for snacking or sharing.' },
+      { id: 'chest-piece', name: 'Chest Piece', price: 350, sizes: null, image: '/images/fried/chest-piece.jpg', description: 'Juicy chicken breast piece with crispy coating and aromatic spices.' },
+      { id: 'leg-piece', name: 'Leg Piece', price: 350, sizes: null, image: '/images/fried/leg-piece.jpg', description: 'Tender chicken leg piece with crispy skin and flavorful marinade.' },
+      { id: 'chicken-samosa', name: 'Chicken Samosa', price: 80, sizes: null, image: '/images/fried/chicken-samosa.jpg', description: 'Crispy triangular pastry filled with spiced chicken, onions, and aromatic herbs.' },
+      { id: 'chicken-pakora', name: 'Chicken Pakoda (1 kg)', price: 1000, sizes: null, image: '/images/fried/chicken-pakora.jpg', description: 'Crispy chicken pakoras with gram flour coating, perfect for sharing with family and friends.' }
     ]
   },
   'pan-n-grill-special': {
     name: 'Pan N Grill Special',
     items: [
-      { id: 'pan-grill-sp-platter', name: 'Pan & Grill Special Platter', price: 650, sizes: null, image: '/images/special/pan-grill-sp-platter.jpg' },
-      { id: 'pizza-sandwich', name: 'Pizza Sandwich', price: 550, sizes: null, image: '/images/special/pizza-sandwich.jpg' },
-      { id: 'pizza-fries', name: 'Pizza Fries', price: 650, sizes: null, image: '/images/special/pizza-fries.jpg' },
-      { id: 'cheesy-spring-roll', name: 'Cheesy Spring Roll (4p)', price: 1000, sizes: null, image: '/images/special/cheesy-spring-roll.jpg' },
-      { id: 'ch-cheese-garlic-bread', name: 'Chicken Cheese Garlic Bread', price: 500, sizes: null, image: '/images/special/ch-cheese-garlic-bread.jpg' }
+      { id: 'pan-grill-sp-platter', name: 'Pan & Grill Special Platter', price: 650, sizes: null, image: '/images/special/pan-grill-sp-platter.jpg', description: 'Our signature platter featuring grilled chicken, rice, salad, and special sauces for a complete meal.' },
+      { id: 'pizza-sandwich', name: 'Pizza Sandwich', price: 550, sizes: null, image: '/images/special/pizza-sandwich.jpg', description: 'Innovative sandwich with pizza flavors, melted cheese, and fresh vegetables between crispy bread.' },
+      { id: 'pizza-fries', name: 'Pizza Fries', price: 650, sizes: null, image: '/images/special/pizza-fries.jpg', description: 'Loaded fries topped with pizza sauce, melted cheese, and your choice of toppings.' },
+      { id: 'cheesy-spring-roll', name: 'Cheesy Spring Roll (4p)', price: 1000, sizes: null, image: '/images/special/cheesy-spring-roll.jpg', description: 'Crispy spring rolls filled with melted cheese and fresh vegetables, served with dipping sauce.' },
+      { id: 'ch-cheese-garlic-bread', name: 'Chicken Cheese Garlic Bread', price: 500, sizes: null, image: '/images/special/ch-cheese-garlic-bread.jpg', description: 'Garlic bread topped with tender chicken pieces, melted cheese, and aromatic herbs.' }
     ]
   },
   'fries': {
     name: 'Fries',
     items: [
-      { id: 'oppa-fries', name: 'Oppa Fries', price: 150, sizes: null, image: '/images/fries/oppa-fries.jpg' },
-      { id: 'large-fries', name: 'Large Fries', price: 250, sizes: null, image: '/images/fries/large-fries.jpg' },
-      { id: 'family-fries', name: 'Family Fries', price: 300, sizes: null, image: '/images/fries/family-fries.jpg' }
+      { id: 'oppa-fries', name: 'Oppa Fries', price: 150, sizes: null, image: '/images/fries/oppa-fries.jpg', description: 'Crispy golden fries with our special seasoning blend for the perfect side dish.' },
+      { id: 'large-fries', name: 'Large Fries', price: 250, sizes: null, image: '/images/fries/large-fries.jpg', description: 'Generous portion of crispy fries perfect for sharing or as a satisfying side.' },
+      { id: 'family-fries', name: 'Family Fries', price: 300, sizes: null, image: '/images/fries/family-fries.jpg', description: 'Extra large portion of crispy fries designed for the whole family to enjoy together.' }
     ]
   },
   'deals': {
     name: 'Deals',
     items: [
-      { id: 'deal-1', name: '2X-Large Pizza + 1.5 Ltr Coke', price: 3200, sizes: null, image: '/images/deals/deal-1.jpg' },
-      { id: 'deal-2', name: '2 Large Pizza + 1.5 Ltr Coke', price: 2700, sizes: null, image: '/images/deals/deal-2.jpg' },
-      { id: 'deal-3', name: '2 Medium Pizza + 1.5 Ltr Coke', price: 1800, sizes: null, image: '/images/deals/deal-3.jpg' },
-      { id: 'deal-4', name: '3 Small Pizza + 1.5 Ltr Coke', price: 1500, sizes: null, image: '/images/deals/deal-4.jpg' },
-      { id: 'deal-5', name: '5 Zinger Burger + 1.5 Ltr Coke', price: 1600, sizes: null, image: '/images/deals/deal-5.jpg' },
-      { id: 'deal-6', name: '1 Creamy Pasta + 1 Zinger Burger + 1 Reg. Fries + 1 Ltr Coke', price: 1100, sizes: null, image: '/images/deals/deal-6.jpg' },
-      { id: 'deal-7', name: '1 Large Pizza + 5 Hot Wings + 5 Nuggets + 2 Zinger Burgers + 1.5 Ltr Coke', price: 2500, sizes: null, image: '/images/deals/deal-7.jpg' }
+      { id: 'deal-1', name: '2X-Large Pizza + 1.5 Ltr Coke', price: 3200, sizes: null, image: '/images/deals/deal-1.jpg', description: 'Perfect family deal with two extra-large pizzas and a refreshing 1.5L Coke for sharing.' },
+      { id: 'deal-2', name: '2 Large Pizza + 1.5 Ltr Coke', price: 2700, sizes: null, image: '/images/deals/deal-2.jpg', description: 'Great value deal with two large pizzas and a 1.5L Coke for a satisfying meal.' },
+      { id: 'deal-3', name: '2 Medium Pizza + 1.5 Ltr Coke', price: 1800, sizes: null, image: '/images/deals/deal-3.jpg', description: 'Perfect for couples with two medium pizzas and a refreshing 1.5L Coke.' },
+      { id: 'deal-4', name: '3 Small Pizza + 1.5 Ltr Coke', price: 1500, sizes: null, image: '/images/deals/deal-4.jpg', description: 'Variety deal with three small pizzas of different flavors and a 1.5L Coke.' },
+      { id: 'deal-5', name: '5 Zinger Burger + 1.5 Ltr Coke', price: 1600, sizes: null, image: '/images/deals/deal-5.jpg', description: 'Burger lovers deal with five crispy zinger burgers and a 1.5L Coke for sharing.' },
+      { id: 'deal-6', name: '1 Creamy Pasta + 1 Zinger Burger + 1 Reg. Fries + 1 Ltr Coke', price: 1100, sizes: null, image: '/images/deals/deal-6.jpg', description: 'Complete meal deal with creamy pasta, zinger burger, regular fries, and 1L Coke.' },
+      { id: 'deal-7', name: '1 Large Pizza + 5 Hot Wings + 5 Nuggets + 2 Zinger Burgers + 1.5 Ltr Coke', price: 2500, sizes: null, image: '/images/deals/deal-7.jpg', description: 'Ultimate feast deal with large pizza, hot wings, nuggets, two zinger burgers, and 1.5L Coke.' }
     ]
   },
   'sauces': {
     name: 'Sauces',
     items: [
-      { id: 'chili-garlic-sauce', name: 'Chili Garlic Sauce', price: 100, sizes: null, image: '/images/sauces/chili-garlic-sauce.jpg' },
-      { id: 'dip-sauce', name: 'Dip Sauce', price: 50, sizes: null, image: '/images/sauces/dip-sauce.jpg' },
-      { id: 'mayonnaise', name: 'Mayonnaise', price: 50, sizes: null, image: '/images/sauces/mayonnaise.jpg' }
+      { id: 'chili-garlic-sauce', name: 'Chili Garlic Sauce', price: 100, sizes: null, image: '/images/sauces/chili-garlic-sauce.jpg', description: 'Spicy and tangy sauce with the perfect blend of chili and garlic for added flavor.' },
+      { id: 'dip-sauce', name: 'Dip Sauce', price: 50, sizes: null, image: '/images/sauces/dip-sauce.jpg', description: 'Creamy dipping sauce perfect for nuggets, fries, and other fried items.' },
+      { id: 'mayonnaise', name: 'Mayonnaise', price: 50, sizes: null, image: '/images/sauces/mayonnaise.jpg', description: 'Creamy mayonnaise sauce to enhance the flavor of burgers, sandwiches, and wraps.' }
     ]
   },
   'cold-coffee': {
     name: 'Cold Coffee',
     items: [
-      { id: 'americano', name: 'Americano', price: 300, sizes: null, image: '/images/coffees/americano.jpg' },
-      { id: 'crazy-lot-kat', name: 'Crazy Lot-Kat', price: 320, sizes: null, image: '/images/coffees/crazy-lot-kat.jpg' },
-      { id: 'cookies-cream', name: 'Cookies & Cream', price: 320, sizes: null, image: '/images/coffees/cookies-cream.jpg' },
-      { id: 'caramel-craves', name: 'Caramel Craves', price: 320, sizes: null, image: '/images/coffees/caramel-craves.jpg' }
+      { id: 'americano', name: 'Americano', price: 300, sizes: null, image: '/images/coffees/americano.jpg', description: 'Classic Americano coffee with rich espresso and hot water for a smooth, bold flavor.' },
+      { id: 'crazy-lot-kat', name: 'Crazy Lot-Kat', price: 320, sizes: null, image: '/images/coffees/crazy-lot-kat.jpg', description: 'Indulgent coffee blend with chocolate, caramel, and crunchy wafer pieces for a sweet treat.' },
+      { id: 'cookies-cream', name: 'Cookies & Cream', price: 320, sizes: null, image: '/images/coffees/cookies-cream.jpg', description: 'Creamy coffee with crushed cookies and vanilla cream for a delightful dessert-like experience.' },
+      { id: 'caramel-craves', name: 'Caramel Craves', price: 320, sizes: null, image: '/images/coffees/caramel-craves.jpg', description: 'Rich coffee with smooth caramel syrup and whipped cream for a sweet, satisfying drink.' }
     ]
   },
   'tea-coffee': {
     name: 'Tea & Coffee',
     items: [
-      { id: 'nescafe-tea', name: "Nescafe Tea", price: 150, sizes: null, image: '/images/coffees/nescafe-tea.jpg' },
-      { id: 'cappuccino', name: 'Cappuccino', price: 300, sizes: null, image: '/images/coffees/cappuccino.jpg' }
+      { id: 'nescafe-tea', name: "Nescafe Tea", price: 150, sizes: null, image: '/images/coffees/nescafe-tea.jpg', description: 'Premium Nescafe tea with rich flavor and aromatic blend for a perfect cup.' },
+      { id: 'cappuccino', name: 'Cappuccino', price: 300, sizes: null, image: '/images/coffees/cappuccino.jpg', description: 'Classic cappuccino with rich espresso, steamed milk, and a perfect layer of foam.' }
     ]
   },
   'ice-cream-flavors': {
     name: 'Ice Cream Flavors',
     items: [
-      { id: 'vanilla-ice', name: 'Vanilla', price: null, sizes: { S: 140, L: 200 }, image: '/images/ice/vanilla-ice.jpg' },
-      { id: 'chocolate-chip-ice', name: 'Chocolate Chip', price: null, sizes: { S: 140, L: 200 }, image: '/images/ice/chocolate-chip-ice.jpg' },
-      { id: 'mango-ice', name: 'Mango', price: null, sizes: { S: 140, L: 200 }, image: '/images/mango-ice.jpg' },
-      { id: 'strawberry-ice', name: 'Strawberry', price: null, sizes: { S: 140, L: 200 }, image: '/images/ice/strawberry-ice.jpg' },
-      { id: 'caramel-crunch-ice', name: 'Caramel Crunch', price: null, sizes: { S: 140, L: 200 }, image: '/images/ice/caramel-crunch-ice.jpg' },
-      { id: 'kulfa-ice', name: 'Kulfa', price: null, sizes: { S: 140, L: 200 }, image: '/images/ice/kulfa-ice.jpg' },
-      { id: 'pista-ice', name: 'Pista', price: null, sizes: { S: 140, L: 200 }, image: '/images/ice/pista-ice.jpg' },
-      { id: 'tutti-frutti-ice', name: 'Tutti Frutti', price: 300, sizes: null, image: '/images/ice/tutti-frutti-ice.jpg' }
+      { id: 'vanilla-ice', name: 'Vanilla', price: null, sizes: { S: 140, L: 200 }, image: '/images/ice/vanilla-ice.jpg', description: 'Classic vanilla ice cream with rich, creamy flavor and smooth texture.' },
+      { id: 'chocolate-chip-ice', name: 'Chocolate Chip', price: null, sizes: { S: 140, L: 200 }, image: '/images/ice/chocolate-chip-ice.jpg', description: 'Rich vanilla ice cream loaded with chocolate chips for a perfect sweet treat.' },
+      { id: 'mango-ice', name: 'Mango', price: null, sizes: { S: 140, L: 200 }, image: '/images/ice/mango-ice.jpg', description: 'Refreshing mango ice cream with real fruit flavor and tropical sweetness.' },
+      { id: 'strawberry-ice', name: 'Strawberry', price: null, sizes: { S: 140, L: 200 }, image: '/images/ice/strawberry-ice.jpg', description: 'Sweet strawberry ice cream with natural fruit flavor and creamy texture.' },
+      { id: 'caramel-crunch-ice', name: 'Caramel Crunch', price: null, sizes: { S: 140, L: 200 }, image: '/images/ice/caramel-crunch-ice.jpg', description: 'Rich caramel ice cream with crunchy toffee pieces for a delightful texture.' },
+      { id: 'kulfa-ice', name: 'Kulfa', price: null, sizes: { S: 140, L: 200 }, image: '/images/ice/kulfa-ice.jpg', description: 'Traditional kulfa ice cream with cardamom, pistachios, and authentic Indian flavors.' },
+      { id: 'pista-ice', name: 'Pista', price: null, sizes: { S: 140, L: 200 }, image: '/images/ice/pista-ice.jpg', description: 'Premium pistachio ice cream with real nuts and rich, nutty flavor.' },
+      { id: 'tutti-frutti-ice', name: 'Tutti Frutti', price: 300, sizes: null, image: '/images/ice/tutti-frutti-ice.jpg', description: 'Colorful tutti frutti ice cream with mixed fruit pieces and vibrant flavors.' }
     ]
   },
   'ice-cream-shake': {
     name: 'Ice Cream Shake',
     items: [
-      { id: 'vanilla-shake', name: 'Vanilla Shake', price: null, sizes: { S: 200, L: 300}, image: '/images/shakes/vanilla-shake.jpg' },
-      { id: 'chocolate-shake', name: 'Chocolate Shake', price: null, sizes: { S: 200, L: 300}, image: '/images/shakes/chocolate-shake.jpg' },
-      { id: 'mango-shake', name: 'Mango Ice Shake', price: null, sizes: { S: 200, L: 300}, image: '/images/shakes/mango-shake.jpg' },
-      { id: 'strawberry-shake', name: 'Strawberry Ice Shake', price: null, sizes: { S: 200, L: 300}, image: '/images/shakes/strawberry-shake.jpg' },
-      { id: 'caramel-crunch-shake', name: 'Caramel Crunch Shake', price: null, sizes: { S: 200, L: 300}, image: '/images/shakes/caramel-crunch-shake.jpg' },
-      { id: 'kulfa-shake', name: 'Kulfa Shake', price: null, sizes: { S: 200, L: 300}, image: '/images/shakes/kulfa-shake.jpg' },
-      { id: 'pista-shake', name: 'Pista Shake', price: null, sizes: { S: 200, L: 300}, image: '/images/shakes/pista-shake.jpg' }
+      { id: 'vanilla-shake', name: 'Vanilla Shake', price: null, sizes: { S: 200, L: 300}, image: '/images/shakes/vanilla-shake.jpg', description: 'Creamy vanilla milkshake with rich ice cream and smooth, sweet flavor.' },
+      { id: 'chocolate-shake', name: 'Chocolate Shake', price: null, sizes: { S: 200, L: 300}, image: '/images/shakes/chocolate-shake.jpg', description: 'Rich chocolate milkshake with premium cocoa and creamy ice cream blend.' },
+      { id: 'mango-shake', name: 'Mango Ice Shake', price: null, sizes: { S: 200, L: 300}, image: '/images/shakes/mango-shake.jpg', description: 'Refreshing mango milkshake with real fruit flavor and tropical sweetness.' },
+      { id: 'strawberry-shake', name: 'Strawberry Ice Shake', price: null, sizes: { S: 200, L: 300}, image: '/images/shakes/strawberry-shake.jpg', description: 'Sweet strawberry milkshake with natural fruit flavor and creamy texture.' },
+      { id: 'caramel-crunch-shake', name: 'Caramel Crunch Shake', price: null, sizes: { S: 200, L: 300}, image: '/images/shakes/caramel-crunch-shake.jpg', description: 'Rich caramel milkshake with crunchy toffee pieces for a delightful texture.' },
+      { id: 'kulfa-shake', name: 'Kulfa Shake', price: null, sizes: { S: 200, L: 300}, image: '/images/shakes/kulfa-shake.jpg', description: 'Traditional kulfa milkshake with cardamom, pistachios, and authentic Indian flavors.' },
+      { id: 'pista-shake', name: 'Pista Shake', price: null, sizes: { S: 200, L: 300}, image: '/images/shakes/pista-shake.jpg', description: 'Premium pistachio milkshake with real nuts and rich, nutty flavor.' }
     ]
   },
   'yums-shake': {
     name: "Yum's Shake",
     items: [
-      { id: 'apple-banana-shake', name: 'Apple Banana Shake', price: 200, sizes: null, image: '/images/shakes/apple-banana-shake.jpg' },
-      { id: 'mango-shake-yums', name: 'Mango Shake', price: 200, sizes: null, image: '/images/shakes/mango-shake.jpg' },
-      { id: 'strawberry-shake-yums', name: 'Strawberry Shake', price: 200, sizes: null, image: '/images/shakes/strawberry-shake.jpg' },
-      { id: 'khoya-khajoor-shake', name: 'Khoya Khajoor Shake', price: 300, sizes: null, image: '/images/shakes/khoya-khajoor-shake.jpg' },
-      { id: 'mix-fruit-shake', name: 'Mix Fruit Shake', price: 300, sizes: null, image: '/images/shakes/mix-fruit-shake.jpg' },
-      { id: 'pineapple-shake', name: 'Pineapple Shake', price: 300, sizes: null, image: '/images/shakes/pineapple-shake.jpg' }
+      { id: 'apple-banana-shake', name: 'Apple Banana Shake', price: 200, sizes: null, image: '/images/shakes/apple-banana-shake.jpg', description: 'Refreshing blend of fresh apple and banana with creamy milk for a healthy treat.' },
+      { id: 'mango-shake-yums', name: 'Mango Shake', price: 200, sizes: null, image: '/images/shakes/mango-shake.jpg', description: 'Fresh mango shake with real fruit pulp and creamy milk for tropical delight.' },
+      { id: 'strawberry-shake-yums', name: 'Strawberry Shake', price: 200, sizes: null, image: '/images/shakes/strawberry-shake.jpg', description: 'Sweet strawberry shake with fresh fruit flavor and smooth, creamy texture.' },
+      { id: 'khoya-khajoor-shake', name: 'Khoya Khajoor Shake', price: 300, sizes: null, image: '/images/shakes/khoya-khajoor-shake.jpg', description: 'Rich shake with khoya (milk solids) and dates for a traditional, indulgent treat.' },
+      { id: 'mix-fruit-shake', name: 'Mix Fruit Shake', price: 300, sizes: null, image: '/images/shakes/mix-fruit-shake.jpg', description: 'Delicious blend of mixed fruits with creamy milk for a refreshing and healthy drink.' },
+      { id: 'pineapple-shake', name: 'Pineapple Shake', price: 300, sizes: null, image: '/images/shakes/pineapple-shake.jpg', description: 'Tropical pineapple shake with fresh fruit flavor and creamy milk blend.' }
     ]
   },
   'russian-salad': {
     name: 'Russian Salad',
     items: [
-      { id: 'russian-salad', name: 'Russian Salad', price: null, sizes: { "Cup": 200, "½ Ltr": 350, "1 Ltr": 700 }, image: '/images/salad/russian-salad.jpg' },
-      { id: 'careem-chat', name: 'Careem Chat', price: 250, sizes: null, image: '/images/salad/careem-chat.jpg' }
+      { id: 'russian-salad', name: 'Russian Salad', price: null, sizes: { "Cup": 200, "½ Ltr": 350, "1 Ltr": 700 }, image: '/images/salad/russian-salad.jpg', description: 'Classic Russian salad with mixed vegetables, potatoes, and creamy mayonnaise dressing.' },
+      { id: 'careem-chat', name: 'Careem Chat', price: 250, sizes: null, image: '/images/salad/careem-chat.jpg', description: 'Spicy and tangy chat with mixed vegetables, chutneys, and aromatic spices.' }
     ]
   },
   'margaritas': {
     name: "Margarita's",
     items: [
-      { id: 'lemonade', name: 'Lemonade', price: 150, sizes: null, image: '/images/margaritas/lemonade.jpg' },
-      { id: 'blue-berry-margarita', name: 'Blue Berry Margarita', price: 250, sizes: null, image: '/images/margaritas/blue-berry-margarita.jpg' },
-      { id: 'mint-margarita', name: 'Mint Margarita', price: 250, sizes: null, image: '/images/margaritas/mint-margarita.jpg' },
-      { id: 'fresh-lime', name: 'Fresh Lime', price: 150, sizes: null, image: '/images/margaritas/fresh-lime.jpg' }
+      { id: 'lemonade', name: 'Lemonade', price: 150, sizes: null, image: '/images/margaritas/lemonade.jpg', description: 'Refreshing lemonade with fresh lemon juice, sugar, and ice for a cool, tangy drink.' },
+      { id: 'blue-berry-margarita', name: 'Blue Berry Margarita', price: 250, sizes: null, image: '/images/margaritas/blue-berry-margarita.jpg', description: 'Vibrant blueberry margarita with fresh berries, lime, and a perfect balance of sweet and tart.' },
+      { id: 'mint-margarita', name: 'Mint Margarita', price: 250, sizes: null, image: '/images/margaritas/mint-margarita.jpg', description: 'Refreshing mint margarita with fresh mint leaves, lime, and a cool, invigorating taste.' },
+      { id: 'fresh-lime', name: 'Fresh Lime', price: 150, sizes: null, image: '/images/margaritas/fresh-lime.jpg', description: 'Fresh lime drink with natural lime juice, sugar, and ice for a zesty, refreshing experience.' }
     ]
   },
   'juices': {
         name: 'Juices',
         items: [
-        { id: 'apple-juice', name: 'Apple Juice', price: 300, sizes: null, image: '/images/juices/apple-juice.jpg' },
-        { id: 'pomegranate-juice', name: 'Pomegranate Juice', price: 400, sizes: null, image: '/images/juices/pomegranate-juice.jpg' },
-        { id: 'limca-juice', name: 'Limca Juice', price: 100, sizes: null, image: '/images/juices/limca-juice.jpg' },
-        { id: 'falsa-juice', name: 'Falsa Juice', price: 150, sizes: null, image: '/images/juices/falsa-juice.jpg' },
-        { id: 'peach-juice', name: 'Peach Juice', price: 200, sizes: null, image: '/images/juices/peach-juice.jpg' }
+        { id: 'apple-juice', name: 'Apple Juice', price: 300, sizes: null, image: '/images/juices/apple-juice.jpg', description: 'Fresh apple juice with natural sweetness and refreshing taste.' },
+        { id: 'pomegranate-juice', name: 'Pomegranate Juice', price: 400, sizes: null, image: '/images/juices/pomegranate-juice.jpg', description: 'Rich pomegranate juice with antioxidants and natural fruit flavor.' },
+        { id: 'limca-juice', name: 'Limca Juice', price: 100, sizes: null, image: '/images/juices/limca-juice.jpg', description: 'Refreshing Limca drink with lemon-lime flavor and fizzy bubbles.' },
+        { id: 'falsa-juice', name: 'Falsa Juice', price: 150, sizes: null, image: '/images/juices/falsa-juice.jpg', description: 'Sweet and tangy falsa juice with natural fruit flavor and cooling properties.' },
+        { id: 'peach-juice', name: 'Peach Juice', price: 200, sizes: null, image: '/images/juices/peach-juice.jpg', description: 'Sweet peach juice with natural fruit flavor and smooth, refreshing taste.' }
         ]
     },
 
     'beverages': {
     name: 'Beverages',
     items: [
-      { id: 'coke', name: 'Coke', price: null, sizes: { "350 ml": 100, "500 ml": 120, "1 Ltr": 180, "1.5 Ltr": 220 }, image: '/images/beverages/coke.jpg' },
-      { id: 'sprite', name: 'Sprite', price: null, sizes: { "350 ml": 100, "500 ml": 120, "1 Ltr": 180, "1.5 Ltr": 220 }, image: '/images/beverages/sprite.jpg' },
-      { id: 'next-cola', name: 'Next Cola', price: null, sizes: { "1 Ltr": 150, "1.5 Ltr": 200 }, image: '/images/beverages/next-cola.jpg' },
-      { id: 'mineral-water', name: 'Mineral Water', price: null, sizes: { "350 ml": 70, "1.5 Ltr": 100 }, image: '/images/beverages/mineral-water.jpg' }
+      { id: 'coke', name: 'Coke', price: null, sizes: { "350 ml": 100, "500 ml": 120, "1 Ltr": 180, "1.5 Ltr": 220 }, image: '/images/beverages/coke.jpg', description: 'Classic Coca-Cola with refreshing taste and fizzy bubbles in various sizes.' },
+      { id: 'sprite', name: 'Sprite', price: null, sizes: { "350 ml": 100, "500 ml": 120, "1 Ltr": 180, "1.5 Ltr": 220 }, image: '/images/beverages/sprite.jpg', description: 'Refreshing lemon-lime soda with crisp, clean taste and fizzy bubbles.' },
+      { id: 'next-cola', name: 'Next Cola', price: null, sizes: { "1 Ltr": 150, "1.5 Ltr": 200 }, image: '/images/beverages/next-cola.jpg', description: 'Premium cola drink with rich flavor and refreshing taste in large sizes.' },
+      { id: 'mineral-water', name: 'Mineral Water', price: null, sizes: { "350 ml": 70, "1.5 Ltr": 100 }, image: '/images/beverages/mineral-water.jpg', description: 'Pure mineral water with natural minerals for hydration and refreshment.' }
         ]
     }
 };

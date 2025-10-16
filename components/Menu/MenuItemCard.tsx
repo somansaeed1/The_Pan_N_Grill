@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { MenuItem } from '@/types';
 import { useCart } from '../Cart/CartProvider';
+import { motion } from 'framer-motion';
 
 interface MenuItemCardProps {
   item: MenuItem;
@@ -36,13 +37,27 @@ export default function MenuItemCard({ item }: MenuItemCardProps) {
   };
 
   return (
-    <article className="menu-item-card bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow flex flex-col h-full">
+    <motion.article 
+      className="menu-item-card bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      whileHover={{ y: -8, scale: 1.02 }}
+      transition={{ 
+        type: "spring", 
+        stiffness: 300, 
+        damping: 20,
+        hover: { duration: 0.2 }
+      }}
+    >
       <div className="flex-shrink-0 w-full overflow-hidden">
         <div className="w-full h-72 md:h-80 lg:h-64 xl:h-72 relative">
-          <img
+          <motion.img
             src={item.image || `/placeholder.svg?height=200&width=300`}
             alt={`${item.name} - Authentic Pakistani cuisine at The Pan N Grill`}
             className="w-full h-full object-cover object-center absolute inset-0"
+            whileHover={{ scale: 1.1 }}
+            transition={{ duration: 0.3 }}
           />
         </div>
       </div>
@@ -51,6 +66,10 @@ export default function MenuItemCard({ item }: MenuItemCardProps) {
         <h3 className="text-base md:text-xl font-heading font-semibold text-primary-900 mb-2">
           {item.name}
         </h3>
+        
+        <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+          {item.description}
+        </p>
 
         {item.sizes && (
           <div className="mb-4">
@@ -58,10 +77,10 @@ export default function MenuItemCard({ item }: MenuItemCardProps) {
               <legend className="text-sm text-gray-600 mb-2">Size:</legend>
               <div className="flex space-x-2" role="radiogroup">
                 {Object.keys(item.sizes).map((size) => (
-                  <button
+                  <motion.button
                     key={size}
                     onClick={() => setSelectedSize(size)}
-                    className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                    className={`px-3 py-1 rounded-full text-sm font-medium transition-all duration-300 ${
                       selectedSize === size
                         ? 'bg-gold-500 text-white'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -69,9 +88,12 @@ export default function MenuItemCard({ item }: MenuItemCardProps) {
                     role="radio"
                     aria-checked={selectedSize === size}
                     aria-label={`Size ${size}`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
                   >
                     {size}
-                  </button>
+                  </motion.button>
                 ))}
               </div>
             </fieldset>
@@ -92,15 +114,23 @@ export default function MenuItemCard({ item }: MenuItemCardProps) {
           </div>
         </div>
 
-        <button
+        <motion.button
           onClick={handleAddToCart}
           disabled={isLoading}
-          className="w-full bg-primary-900 hover:bg-primary-800 disabled:bg-gray-400 text-white py-2 md:py-3 rounded-lg text-sm md:text-base font-semibold transition-colors mt-auto"
+          className="w-full bg-primary-900 hover:bg-primary-800 disabled:bg-gray-400 text-white py-2 md:py-3 rounded-lg text-sm md:text-base font-semibold transition-all duration-300 mt-auto shadow-lg hover:shadow-xl"
           aria-label={`Add ${item.name} to cart`}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
         >
-          {isLoading ? 'Adding...' : 'Add to Cart'}
-        </button>
+          <motion.span
+            animate={{ opacity: isLoading ? 0.7 : 1 }}
+            transition={{ duration: 0.2 }}
+          >
+            {isLoading ? 'Adding...' : 'Add to Cart'}
+          </motion.span>
+        </motion.button>
       </div>
-    </article>
+    </motion.article>
   );
 }

@@ -4,6 +4,7 @@ export interface MenuItem {
   price: number | null;
   sizes: { [key: string]: number } | null;
   image: string;
+  description: string;
 }
 
 export interface MenuCategory {
