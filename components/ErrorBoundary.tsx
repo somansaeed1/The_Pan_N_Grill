@@ -36,7 +36,11 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
             </p>
             <div className="space-x-4">
               <button
-                onClick={() => window.location.reload()}
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    window.location.reload();
+                  }
+                }}
                 className="bg-primary-900 text-white px-6 py-3 rounded-lg hover:bg-primary-800 transition-colors"
               >
                 Refresh Page

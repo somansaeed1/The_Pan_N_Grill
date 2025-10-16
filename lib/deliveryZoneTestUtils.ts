@@ -83,7 +83,7 @@ export const mockGeolocation = (lat: number, lng: number) => {
         heading: null,
         speed: null
       },
-      timestamp: Date.now()
+      timestamp: typeof window !== 'undefined' ? Date.now() : 0
     };
 
     // Override getCurrentPosition

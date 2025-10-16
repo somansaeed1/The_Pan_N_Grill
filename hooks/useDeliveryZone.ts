@@ -49,62 +49,64 @@ export function useDeliveryZone(options: UseDeliveryZoneOptions = {}) {
 
   // Check for saved location data on mount
   useEffect(() => {
-    try {
-      const savedLocation = localStorage.getItem('panngrill-location');
-      console.log('useDeliveryZone: Checking saved location:', savedLocation);
-      
-      if (savedLocation) {
-        const locationData = JSON.parse(savedLocation);
-        console.log('useDeliveryZone: Parsed location data:', locationData);
+    if (typeof window !== 'undefined') {
+      try {
+        const savedLocation = localStorage.getItem('panngrill-location');
+        console.log('useDeliveryZone: Checking saved location:', savedLocation);
         
-        if (locationData) {
-          if (locationData.skipped) {
-            // User skipped location - allow delivery without restrictions
-            setResult({
-              userLocation: null,
-              cityName: null,
-              distanceKm: null,
-              orderRule: { 
-                minDistance: 0, 
-                maxDistance: Infinity, 
-                minOrder: locationData.minOrder || 0, 
-                message: locationData.message || 'No minimum order required',
-                emoji: '✅'
-              },
-              deliveryAllowed: locationData.deliveryAllowed || true,
-              errorMessage: null,
-              loading: false,
-              hasLocation: locationData.hasLocation || true
-            });
-          } else if (locationData.hasLocation) {
-            // User provided location (new format from LocationProvider)
-            setResult({
-              userLocation: locationData.lat && locationData.lng ? { lat: locationData.lat, lng: locationData.lng } : null,
-              cityName: locationData.name || null,
-              distanceKm: locationData.distanceKm || null,
-              orderRule: locationData.orderRule || { minOrder: locationData.minOrder || 0, message: locationData.message || 'No minimum order required' },
-              deliveryAllowed: locationData.deliveryAllowed || locationData.allowed || false,
-              errorMessage: null,
-              loading: false,
-              hasLocation: locationData.hasLocation || true
-            });
-          } else if (locationData.lat && locationData.lng) {
-            // User provided location (old format)
-            setResult({
-              userLocation: { lat: locationData.lat, lng: locationData.lng },
-              cityName: locationData.name,
-              distanceKm: locationData.distanceKm,
-              orderRule: locationData.orderRule,
-              deliveryAllowed: locationData.deliveryAllowed,
-              errorMessage: null,
-              loading: false,
-              hasLocation: true
-            });
+        if (savedLocation) {
+          const locationData = JSON.parse(savedLocation);
+          console.log('useDeliveryZone: Parsed location data:', locationData);
+          
+          if (locationData) {
+            if (locationData.skipped) {
+              // User skipped location - allow delivery without restrictions
+              setResult({
+                userLocation: null,
+                cityName: null,
+                distanceKm: null,
+                orderRule: { 
+                  minDistance: 0, 
+                  maxDistance: Infinity, 
+                  minOrder: locationData.minOrder || 0, 
+                  message: locationData.message || 'No minimum order required',
+                  emoji: '✅'
+                },
+                deliveryAllowed: locationData.deliveryAllowed || true,
+                errorMessage: null,
+                loading: false,
+                hasLocation: locationData.hasLocation || true
+              });
+            } else if (locationData.hasLocation) {
+              // User provided location (new format from LocationProvider)
+              setResult({
+                userLocation: locationData.lat && locationData.lng ? { lat: locationData.lat, lng: locationData.lng } : null,
+                cityName: locationData.name || null,
+                distanceKm: locationData.distanceKm || null,
+                orderRule: locationData.orderRule || { minOrder: locationData.minOrder || 0, message: locationData.message || 'No minimum order required' },
+                deliveryAllowed: locationData.deliveryAllowed || locationData.allowed || false,
+                errorMessage: null,
+                loading: false,
+                hasLocation: locationData.hasLocation || true
+              });
+            } else if (locationData.lat && locationData.lng) {
+              // User provided location (old format)
+              setResult({
+                userLocation: { lat: locationData.lat, lng: locationData.lng },
+                cityName: locationData.name,
+                distanceKm: locationData.distanceKm,
+                orderRule: locationData.orderRule,
+                deliveryAllowed: locationData.deliveryAllowed,
+                errorMessage: null,
+                loading: false,
+                hasLocation: true
+              });
+            }
           }
         }
+      } catch (error) {
+        console.warn('Failed to load saved location:', error);
       }
-    } catch (error) {
-      console.warn('Failed to load saved location:', error);
     }
   }, []);
 

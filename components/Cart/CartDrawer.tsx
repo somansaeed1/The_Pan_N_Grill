@@ -27,22 +27,24 @@ export default function CartDrawer() {
     const totalAmount = getTotalPrice();
     
     // Save checkout snapshot
-    try {
-      const snapshot = {
-        items: cartItems.map((it) => ({
-          id: it.id,
-          name: it.name,
-          // ensure price is a number when serializing
-          price: typeof it.price === 'number' ? it.price : 0,
-          quantity: it.quantity,
-          size: it.size || 'regular',
-          image: it.image || '',
-        })),
-        total: totalAmount,
-      };
-      localStorage.setItem('checkoutData', JSON.stringify(snapshot));
-    } catch (e) {
-      console.warn('Could not save checkout snapshot', e);
+    if (typeof window !== 'undefined') {
+      try {
+        const snapshot = {
+          items: cartItems.map((it) => ({
+            id: it.id,
+            name: it.name,
+            // ensure price is a number when serializing
+            price: typeof it.price === 'number' ? it.price : 0,
+            quantity: it.quantity,
+            size: it.size || 'regular',
+            image: it.image || '',
+          })),
+          total: totalAmount,
+        };
+        localStorage.setItem('checkoutData', JSON.stringify(snapshot));
+      } catch (e) {
+        console.warn('Could not save checkout snapshot', e);
+      }
     }
 
     setIsCartOpen(false);

@@ -55,31 +55,33 @@ export default function CheckoutPage() {
 
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem('checkoutData');
-      if (raw) {
-        const parsed = JSON.parse(raw);
+    if (typeof window !== 'undefined') {
+      try {
+        const raw = localStorage.getItem('checkoutData');
+        if (raw) {
+          const parsed = JSON.parse(raw);
 
-        // Normalize for backward compatibility: older snapshots used `qty`.
-        if (parsed && Array.isArray(parsed.items)) {
-          const normalizedItems = parsed.items.map((it: any) => ({
-            id: it.id,
-            name: it.name,
-            // ensure numeric price
-            price: typeof it.price === 'number' ? it.price : Number(it.price) || 0,
-            // support legacy `qty` field
-            quantity: typeof it.quantity === 'number' ? it.quantity : Number(it.qty) || 0,
-            size: it.size || 'regular',
-            image: it.image || '',
-          }));
+          // Normalize for backward compatibility: older snapshots used `qty`.
+          if (parsed && Array.isArray(parsed.items)) {
+            const normalizedItems = parsed.items.map((it: any) => ({
+              id: it.id,
+              name: it.name,
+              // ensure numeric price
+              price: typeof it.price === 'number' ? it.price : Number(it.price) || 0,
+              // support legacy `qty` field
+              quantity: typeof it.quantity === 'number' ? it.quantity : Number(it.qty) || 0,
+              size: it.size || 'regular',
+              image: it.image || '',
+            }));
 
-          setCartData({ items: normalizedItems, total: Number(parsed.total) || 0 });
-        } else {
-          setCartData(parsed);
+            setCartData({ items: normalizedItems, total: Number(parsed.total) || 0 });
+          } else {
+            setCartData(parsed);
+          }
         }
+      } catch (e) {
+        console.error('Failed to parse checkoutData', e);
       }
-    } catch (e) {
-      console.error('Failed to parse checkoutData', e);
     }
   }, []);
 
@@ -198,14 +200,18 @@ export default function CheckoutPage() {
 
     // Clear cart and checkout data after order is placed
     clearCart();
-    localStorage.removeItem('checkoutData');
-    localStorage.removeItem('panngrill-cart'); // Ensure cart is cleared from localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('checkoutData');
+      localStorage.removeItem('panngrill-cart'); // Ensure cart is cleared from localStorage
+    }
     setCartData({ items: [], total: 0 }); // Clear local cartData state
     showToast('Order placed successfully!', 'success');
     
     // Use setTimeout to ensure state updates complete before navigation
     setTimeout(() => {
-      window.location.href = whatsappUrl;
+      if (typeof window !== 'undefined') {
+        window.location.href = whatsappUrl;
+      }
     }, 100);
   };
 
@@ -360,12 +366,16 @@ export default function CheckoutPage() {
                   e.preventDefault();
                   if (validateForm()) {
                     clearCart();
-                    localStorage.removeItem('checkoutData');
-                    localStorage.removeItem('panngrill-cart');
+                    if (typeof window !== 'undefined') {
+                      localStorage.removeItem('checkoutData');
+                      localStorage.removeItem('panngrill-cart');
+                    }
                     setCartData({ items: [], total: 0 }); // Clear local cartData state
                     showToast('Order placed successfully!', 'success');
                     setTimeout(() => {
-                      window.open(getWhatsAppUrl(), '_blank');
+                      if (typeof window !== 'undefined') {
+                        window.open(getWhatsAppUrl(), '_blank');
+                      }
                     }, 100);
                   }
                 }}

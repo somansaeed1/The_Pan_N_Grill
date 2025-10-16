@@ -25,7 +25,9 @@ export default function ContactPage() {
     const message = `Hello! I'm contacting you from your website.\n\nName: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\nMessage: ${formData.message}`;
     const whatsappUrl = `https://wa.me/923456500649?text=${encodeURIComponent(message)}`;
 
-    window.open(whatsappUrl, '_blank');
+    if (typeof window !== 'undefined') {
+      window.open(whatsappUrl, '_blank');
+    }
     showToast('Redirecting to WhatsApp...');
 
     setFormData({

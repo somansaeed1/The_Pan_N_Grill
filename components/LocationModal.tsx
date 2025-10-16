@@ -96,7 +96,7 @@ export default function LocationModal({ open, onClose }: LocationModalProps) {
       const locSnapshot = {
         lat: +data.lat,
         lng: +data.lng,
-        timestamp: Date.now(),
+        timestamp: typeof window !== 'undefined' ? Date.now() : 0,
         distanceKm: data.distanceKm,
         message: data.orderRule.message,
         mapsLink,
@@ -104,7 +104,9 @@ export default function LocationModal({ open, onClose }: LocationModalProps) {
         deliveryAllowed: data.deliveryAllowed,
         orderRule: data.orderRule
       };
-      localStorage.setItem('panngrill-location', JSON.stringify(locSnapshot));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('panngrill-location', JSON.stringify(locSnapshot));
+      }
     } catch (e) {
       console.warn('Could not save location:', e);
     }
@@ -195,7 +197,9 @@ export default function LocationModal({ open, onClose }: LocationModalProps) {
                   deliveryAllowed: locationData.deliveryAllowed,
                   hasLocation: true
                 };
-                localStorage.setItem('panngrill-location', JSON.stringify(fullLocationData));
+                if (typeof window !== 'undefined') {
+                  localStorage.setItem('panngrill-location', JSON.stringify(fullLocationData));
+                }
                 onClose(decision);
               }}
               className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded text-sm transition-colors"

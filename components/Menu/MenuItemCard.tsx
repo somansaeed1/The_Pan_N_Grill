@@ -46,8 +46,7 @@ export default function MenuItemCard({ item }: MenuItemCardProps) {
       transition={{ 
         type: "spring", 
         stiffness: 300, 
-        damping: 20,
-        hover: { duration: 0.2 }
+        damping: 20
       }}
     >
       <div className="flex-shrink-0 w-full overflow-hidden">
@@ -67,9 +66,9 @@ export default function MenuItemCard({ item }: MenuItemCardProps) {
           {item.name}
         </h3>
         
-        <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+        <div className="text-sm text-gray-600 mb-4 leading-relaxed">
           {item.description}
-        </p>
+        </div>
 
         {item.sizes && (
           <div className="mb-4">

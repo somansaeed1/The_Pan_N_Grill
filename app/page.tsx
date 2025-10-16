@@ -341,7 +341,7 @@ export default function HomePage() {
                   {item.icon}
                 </motion.div>
                 <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                <p className="text-gray-200">{item.content}</p>
+                <div className="text-gray-200">{item.content}</div>
               </motion.div>
             ))}
           </div>
