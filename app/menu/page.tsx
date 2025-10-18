@@ -8,7 +8,13 @@ import MobileCategoryNav from '@/components/Menu/MobileCategoryNav';
 export default function MenuPage() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [search, setSearch] = useState('');
+  const [isClient, setIsClient] = useState(false);
   const categoryRefs = useRef<{ [key: string]: HTMLElement | null }>({});
+
+  // Ensure client-side hydration is complete
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const categories = Object.keys(menuData);
 
@@ -26,6 +32,8 @@ export default function MenuPage() {
   };
 
   useEffect(() => {
+    if (!isClient) return;
+
     let ticking = false;
     const handleScroll = () => {
       if (!ticking) {
@@ -54,7 +62,7 @@ export default function MenuPage() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [categories]);
+  }, [categories, isClient]);
 
   const filteredMenuData = search.trim()
     ? Object.fromEntries(
@@ -94,13 +102,15 @@ export default function MenuPage() {
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
             </span>
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search menu items..."
-              className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-colors text-lg"
-            />
+            {isClient && (
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search menu items..."
+                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-colors text-lg"
+              />
+            )}
           </div>
         </div>
       </div>

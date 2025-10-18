@@ -1,15 +1,21 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { showToast } from '@/lib/cartUtils';
 
 export default function ContactPage() {
+  const [isClient, setIsClient] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     message: '',
   });
+
+  // Ensure client-side hydration is complete
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -25,11 +31,11 @@ export default function ContactPage() {
     const message = `Hello! I'm contacting you from your website.\n\nName: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\nMessage: ${formData.message}`;
     const whatsappUrl = `https://wa.me/923456500649?text=${encodeURIComponent(message)}`;
 
-    if (typeof window !== 'undefined') {
-      window.open(whatsappUrl, '_blank');
-    }
+    // Open WhatsApp in a new tab (client-side only)
+    window.open(whatsappUrl, '_blank');
     showToast('Redirecting to WhatsApp...');
 
+    // Reset form
     setFormData({
       name: '',
       email: '',
@@ -167,81 +173,83 @@ export default function ContactPage() {
             <div>
               <h2 className="text-3xl font-heading font-bold text-primary-900 mb-8">Send Us a Message</h2>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-colors"
-                    placeholder="Enter your full name"
-                  />
-                </div>
+              {isClient && (
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                      Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-colors"
+                      placeholder="Enter your full name"
+                    />
+                  </div>
 
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-colors"
-                    placeholder="Enter your email address"
-                  />
-                </div>
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-colors"
+                      placeholder="Enter your email address"
+                    />
+                  </div>
 
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone Number *
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-colors"
-                    placeholder="Enter your phone number"
-                  />
-                </div>
+                  <div>
+                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                      Phone Number *
+                    </label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-colors"
+                      placeholder="Enter your phone number"
+                    />
+                  </div>
 
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                    Message *
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    required
-                    rows={5}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-colors resize-vertical"
-                    placeholder="Tell us about your inquiry, reservation request, or feedback..."
-                  />
-                </div>
+                  <div>
+                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                      Message *
+                    </label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      required
+                      rows={5}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-colors resize-vertical"
+                      placeholder="Tell us about your inquiry, reservation request, or feedback..."
+                    />
+                  </div>
 
-                <button
-                  type="submit"
-                  className="w-full bg-gold-500 hover:bg-gold-600 text-white py-4 rounded-lg text-lg font-semibold transition-colors shadow-lg"
-                >
-                  Send Message via WhatsApp
-                </button>
+                  <button
+                    type="submit"
+                    className="w-full bg-gold-500 hover:bg-gold-600 text-white py-4 rounded-lg text-lg font-semibold transition-colors shadow-lg"
+                  >
+                    Send Message via WhatsApp
+                  </button>
 
-                <p className="text-sm text-gray-500 text-center">
-                  * Required fields. Your message will be sent via WhatsApp for faster response.
-                </p>
-              </form>
+                  <p className="text-sm text-gray-500 text-center">
+                    * Required fields. Your message will be sent via WhatsApp for faster response.
+                  </p>
+                </form>
+              )}
             </div>
           </div>
         </div>
