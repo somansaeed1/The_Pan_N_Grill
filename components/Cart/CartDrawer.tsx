@@ -5,8 +5,10 @@ import { useCart } from './CartProvider';
 import CartItem from './CartItem';
 import { showToast } from '@/lib/cartUtils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useState } from 'react';
 
 export default function CartDrawer() {
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const {
     cartItems,
@@ -17,6 +19,12 @@ export default function CartDrawer() {
     getTotalPrice,
     clearCart,
   } = useCart();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   const handleCheckout = () => {
     if (cartItems.length === 0) {
