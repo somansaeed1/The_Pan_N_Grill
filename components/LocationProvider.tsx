@@ -16,7 +16,6 @@ export default function LocationProvider() {
     if (!mounted) return;
 
     // Always show modal when website loads
-    console.log('LocationProvider: Showing modal on website load');
     setShowLocationModal(true);
   }, [mounted]);
 
@@ -24,7 +23,6 @@ export default function LocationProvider() {
     setShowLocationModal(false);
     if (typeof window !== 'undefined') {
       if (decision) {
-        console.log('Location decision:', decision);
         // Save location data to localStorage in the format expected by useDeliveryZone
         localStorage.setItem('panngrill-location', JSON.stringify({
           ...decision,

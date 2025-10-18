@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { CartItem as CartItemType } from '@/types';
 import { showToast } from '@/lib/cartUtils';
 
@@ -14,11 +15,12 @@ export default function CartItem({ item, onUpdateQuantity, onRemove }: CartItemP
     <div className="flex items-center space-x-4 bg-gray-50 rounded-lg p-4 min-h-[140px]">
       {/* Item Image */}
       <div className="flex-shrink-0 flex items-center justify-center h-20 w-20">
-        <img
+        <Image
           src={item.image || `/placeholder.svg?height=80&width=80`}
           alt={item.name}
+          width={80}
+          height={80}
           className="rounded-lg bg-white object-contain"
-          style={{ width: '80px', height: '80px' }}
         />
       </div>
 

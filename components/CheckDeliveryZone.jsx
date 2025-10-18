@@ -58,23 +58,17 @@ export default function CheckDeliveryZone() {
 
     try {
       // Step 1: Get user's current location using browser Geolocation API
-      console.log('📍 Getting user location...');
       const userCoords = await getUserLocation();
-      
-      console.log('✅ User location:', userCoords);
       setZoneData(prev => ({
         ...prev,
         userLocation: userCoords
       }));
 
       // Step 2: Get city name using FREE OpenStreetMap Nominatim API
-      console.log('🌍 Fetching city name from OpenStreetMap...');
       const cityName = await getCityFromCoordinates(
         userCoords.lat,
         userCoords.lng
       );
-      
-      console.log('✅ City detected:', cityName);
       setZoneData(prev => ({
         ...prev,
         cityName
@@ -84,7 +78,6 @@ export default function CheckDeliveryZone() {
       const deliveryAllowed = isDeliveryAvailable(cityName);
 
       if (!deliveryAllowed) {
-        console.log('❌ City not in delivery zone');
         setZoneData(prev => ({
           ...prev,
           deliveryAllowed: false,
@@ -95,13 +88,10 @@ export default function CheckDeliveryZone() {
       }
 
       // Step 4: Calculate distance using Haversine formula (FREE - no API)
-      console.log('📏 Calculating distance using Haversine formula...');
       const distanceKm = calculateDistance(
         userCoords.lat,
         userCoords.lng
       );
-
-      console.log('✅ Distance calculated:', distanceKm, 'km');
 
       // Step 5: Get order limit rule based on distance
       const orderRule = getOrderLimit(distanceKm);
@@ -116,11 +106,6 @@ export default function CheckDeliveryZone() {
         errorMessage: null
       });
 
-      console.log('✅ Delivery zone check complete:', {
-        city: cityName,
-        distance: distanceKm,
-        minOrder: orderRule.minOrder
-      });
 
     } catch (error) {
       console.error('❌ Error detecting location:', error);

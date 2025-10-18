@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 export default function AboutPage() {
   return (
     <div className="pt-20">
@@ -51,9 +53,11 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             {/* Owner Image */}
             <div className="flex-shrink-0 flex justify-center md:justify-end">
-              <img
+              <Image
                 src="/images/client.jpg"
                 alt="Dr. Muhammad Kashif"
+                width={256}
+                height={256}
                 className="rounded-full shadow-md w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 object-cover object-top border-4 border-white"
               />
             </div>

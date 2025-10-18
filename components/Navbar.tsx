@@ -4,13 +4,10 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCart } from './Cart/CartProvider';
-import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function Navbar() {
+function NavbarContent() {
   const pathname = usePathname();
-  // Hide the Navbar completely on checkout page to create a distraction-free experience
-  if (pathname?.startsWith('/checkout')) return null;
   const { getTotalItems, setIsCartOpen } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -216,4 +213,15 @@ export default function Navbar() {
       </div>
     </motion.nav>
   );
+}
+
+export default function Navbar() {
+  const pathname = usePathname();
+  
+  // Hide the Navbar completely on checkout page to create a distraction-free experience
+  if (pathname?.startsWith('/checkout')) {
+    return null;
+  }
+  
+  return <NavbarContent />;
 }

@@ -51,7 +51,7 @@ export const menuData: MenuData = {
       { id: 'zinger-pratha-roll', name: 'Zinger Pratha Roll', price: 400, sizes: null, image: '/images/rolls/zinger-pratha-roll.jpg', description: 'Crispy zinger chicken fillet wrapped in soft paratha with spicy mayo and fresh vegetables.' },
       { id: 'afghani-pratha-roll', name: 'Afghani Pratha Roll', price: 400, sizes: null, image: '/images/rolls/afghani-paratha-roll.jpg', description: 'Afghani-style marinated chicken with rich spices wrapped in warm, flaky paratha bread.' },
       { id: 'pizza-pratha-roll', name: 'Pizza Pratha Roll', price: 350, sizes: null, image: '/images/rolls/pizza-pratha-roll.jpg', description: 'Pizza-inspired roll with chicken, cheese, and pizza sauce wrapped in crispy paratha.' },
-      { id: 'patty-pratha-roll', name: 'Patty Pratha Roll', price: 300, sizes: null, image: '/images/rolls/patty-pratha-roll.png', description: 'Crispy chicken patty with fresh vegetables and tangy sauce wrapped in soft paratha.' },
+      { id: 'patty-pratha-roll', name: 'Patty Pratha Roll', price: 300, sizes: null, image: '/images/rolls/patty-pratha-roll.jpg', description: 'Crispy chicken patty with fresh vegetables and tangy sauce wrapped in soft paratha.' },
       { id: 'grill-pratha-roll', name: 'Grill Pratha Roll', price: 350, sizes: null, image: '/images/rolls/grill-pratha-roll.jpg', description: 'Perfectly grilled chicken with smoky flavors wrapped in warm paratha with fresh salad.' }
     ]
   },

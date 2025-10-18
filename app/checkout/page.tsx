@@ -42,16 +42,6 @@ export default function CheckoutPage() {
     validateOrder
   } = useDeliveryZone();
 
-  // Debug logging
-  useEffect(() => {
-    console.log('Checkout: Location state:', {
-      hasLocation,
-      deliveryAllowed,
-      orderRule,
-      distanceKm,
-      cityName
-    });
-  }, [hasLocation, deliveryAllowed, orderRule, distanceKm, cityName]);
 
 
   useEffect(() => {
@@ -196,7 +186,6 @@ export default function CheckoutPage() {
     }
 
     const whatsappUrl = getWhatsAppUrl();
-    console.log('Opening WhatsApp URL:', whatsappUrl);
 
     // Clear cart and checkout data after order is placed
     clearCart();

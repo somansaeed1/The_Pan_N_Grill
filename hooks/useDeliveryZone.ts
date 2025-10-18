@@ -52,11 +52,8 @@ export function useDeliveryZone(options: UseDeliveryZoneOptions = {}) {
     if (typeof window !== 'undefined') {
       try {
         const savedLocation = localStorage.getItem('panngrill-location');
-        console.log('useDeliveryZone: Checking saved location:', savedLocation);
-        
         if (savedLocation) {
           const locationData = JSON.parse(savedLocation);
-          console.log('useDeliveryZone: Parsed location data:', locationData);
           
           if (locationData) {
             if (locationData.skipped) {
