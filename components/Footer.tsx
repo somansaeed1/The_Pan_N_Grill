@@ -1,17 +1,11 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 export default function Footer() {
   return (
-    <motion.footer 
-      className="bg-primary-900 text-white py-8 md:py-12"
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-    >
+    <footer className="bg-primary-900 text-white py-8 md:py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo and Description */}
@@ -19,7 +13,7 @@ export default function Footer() {
             className="md:col-span-2"
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
           >
             <h3 className="text-xl md:text-2xl font-logo font-normal text-gold-400 mb-4">
@@ -66,7 +60,7 @@ export default function Footer() {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
           >
             <h4 className="text-base md:text-lg font-semibold mb-2">Quick Links</h4>
@@ -81,7 +75,7 @@ export default function Footer() {
                   key={link.href}
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
+                  viewport={{ once: true }}
                   transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
                 >
                   <Link 
@@ -104,7 +98,7 @@ export default function Footer() {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
           >
             <h4 className="text-base md:text-lg font-semibold mb-2">Contact Info</h4>
@@ -136,18 +130,13 @@ export default function Footer() {
           </motion.div>
         </div>
 
-        <motion.div 
-          className="border-t border-gray-800 mt-6 md:mt-8 pt-4 md:pt-6 text-center text-gray-400"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
-        >
-          <p className="text-xs sm:text-sm">
+        {/* Copyright Section - Fixed visibility */}
+        <div className="border-t border-gray-800 mt-6 md:mt-8 pt-4 md:pt-6 text-center">
+          <p className="text-xs sm:text-sm text-gray-300">
             &copy; 2025 The Pan N Grill. All rights reserved. | Authentic Pakistani Cuisine
           </p>
-        </motion.div>
+        </div>
       </div>
-    </motion.footer>
+    </footer>
   );
 }
