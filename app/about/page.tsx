@@ -40,8 +40,13 @@ export default function AboutPage() {
                 experiences for every guest who walks through our doors.
               </p>
             </div>
-            <div className="relative order-first lg:order-last">
-              <div className="rounded-xl shadow-lg bg-gray-200 h-64 sm:h-80 md:h-96"></div>
+            <div className="relative order-first lg:order-last h-64 sm:h-80 md:h-96 rounded-xl shadow-lg overflow-hidden">
+              <Image
+                src="/images/3.png"
+                alt="The Pan N Grill Restaurant"
+                fill
+                className="object-cover"
+              />
             </div>
           </div>
         </div>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 export default function HomePage() {
@@ -41,32 +42,44 @@ export default function HomePage() {
   return (
     <div className="pt-20">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700 hero-pattern">
-        <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 md:py-24 lg:py-32">
-          <div className="w-full text-center">
+      <section className="relative min-h-screen flex items-center">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/images/2.png"
+            alt="The Pan N Grill Restaurant"
+            fill
+            className="object-cover"
+            priority
+          />
+          {/* Gradient Overlay for better text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40"></div>
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 md:py-24 lg:py-32 w-full">
+          <div className="max-w-3xl">
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
               className="mb-4 sm:mb-6"
             >
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-heading font-bold text-white text-center mx-auto">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-heading font-bold text-white">
                 Welcome to
               </h1>
               <motion.div 
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-                className="font-logo text-gold-400 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl mt-2 text-center mx-auto block"
-                style={{ textAlign: 'center', display: 'block', width: '100%' }}
+                className="font-logo text-gold-400 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl mt-2"
               >The Pan N Grill</motion.div>
             </motion.div>
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
-              className="text-lg sm:text-xl md:text-2xl text-white mb-4 sm:mb-6 md:mb-8 max-w-3xl mx-auto text-center"
+              className="text-lg sm:text-xl md:text-2xl text-white mb-4 sm:mb-6 md:mb-8"
             >
               Authentic Pakistani Taste in the Heart of Jhang
             </motion.p>
@@ -74,7 +87,7 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.7, ease: "easeOut" }}
-              className="text-base sm:text-lg text-gray-200 mb-8 sm:mb-10 md:mb-12 max-w-2xl mx-auto text-center"
+              className="text-base sm:text-lg text-gray-200 mb-8 sm:mb-10 md:mb-12"
             >
               Experience the finest Pakistani cuisine with our signature pizzas, shawarmas, burgers,
               and traditional dishes. Made with love, served with pride.
@@ -83,7 +96,7 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.9, ease: "easeOut" }}
-              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4"
             >
               <motion.div
                 whileHover={{ scale: 1.05 }}
@@ -218,15 +231,15 @@ export default function HomePage() {
                 </Link>
               </motion.div>
             </motion.div>
-            <motion.div 
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-              viewport={{ once: true, margin: "-100px" }}
-              className="relative"
-            >
-              <div className="rounded-xl shadow-lg bg-gray-200 h-96"></div>
-            </motion.div>
+            <div className="relative h-96 rounded-xl shadow-lg overflow-hidden">
+              <Image 
+                src="/images/1.png" 
+                alt="Authentic Pakistani Cuisine" 
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
           </div>
         </div>
       </section>
