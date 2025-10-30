@@ -25,36 +25,42 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [deliveryZone, setDeliveryZone] = useState<{ distanceKm: number; cityName: string | null } | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  // Set mounted flag
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Load cart from localStorage on mount
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const savedCart = localStorage.getItem('panngrill-cart');
-        if (savedCart) {
-          const parsedCart = JSON.parse(savedCart);
-          if (Array.isArray(parsedCart)) {
-            setCartItems(parsedCart);
-          }
+    if (!mounted || typeof window === 'undefined') return;
+    
+    try {
+      const savedCart = localStorage.getItem('panngrill-cart');
+      if (savedCart) {
+        const parsedCart = JSON.parse(savedCart);
+        if (Array.isArray(parsedCart)) {
+          setCartItems(parsedCart);
         }
-      } catch (error) {
-        console.error('Error loading cart from localStorage:', error);
-        localStorage.removeItem('panngrill-cart');
       }
+    } catch (error) {
+      console.error('Error loading cart from localStorage:', error);
+      localStorage.removeItem('panngrill-cart');
     }
-  }, []);
+  }, [mounted]);
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.setItem('panngrill-cart', JSON.stringify(cartItems));
-      } catch (error) {
-        console.error('Error saving cart to localStorage:', error);
-        showToast('Unable to save cart. Please try again.', 'error');
-      }
+    if (!mounted || typeof window === 'undefined') return;
+    
+    try {
+      localStorage.setItem('panngrill-cart', JSON.stringify(cartItems));
+    } catch (error) {
+      console.error('Error saving cart to localStorage:', error);
+      showToast('Unable to save cart. Please try again.', 'error');
     }
-  }, [cartItems]);
+  }, [cartItems, mounted]);
 
   const addToCart = (item: Omit<CartItem, 'quantity'>) => {
     // Check if delivery zone is set and valid

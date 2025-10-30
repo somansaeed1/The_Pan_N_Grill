@@ -18,20 +18,13 @@ interface MenuCategoryProps {
 
 const MenuCategory = forwardRef<HTMLElement, MenuCategoryProps>(
   ({ categoryId, category, columns = {} }, ref) => {
-    const base = columns.base ?? 2;
-    const md = columns.md ?? 3;
-    const lg = columns.lg ?? 4;
-    const xl = columns.xl;
-
-    const gridClasses = `grid grid-cols-${base} md:grid-cols-${md} lg:grid-cols-${lg}` +
-      (xl ? ` xl:grid-cols-${xl}` : '') +
-      ' gap-4';
+    // Use fixed grid classes instead of dynamic ones for Tailwind
     return (
-      <section ref={ref} className="mb-16">
-        <h2 className="text-3xl font-heading font-bold text-primary-900 mb-8 border-b-2 border-gold-500 pb-4">
+      <section ref={ref} className="mb-12 sm:mb-14 md:mb-16">
+        <h2 className="text-2xl sm:text-3xl font-heading font-bold text-primary-900 mb-6 sm:mb-8 border-b-2 border-gold-500 pb-3 sm:pb-4">
           {category.name}
         </h2>
-        <div className={gridClasses}>
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5 md:gap-6">
           {category.items.map((item) => (
             <MenuItemCard key={item.id} item={item} />
           ))}

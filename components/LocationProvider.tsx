@@ -10,14 +10,14 @@ export default function LocationProvider() {
 
   useEffect(() => {
     setMounted(true);
+    
+    // Show modal after a small delay to avoid hydration mismatch
+    const timer = setTimeout(() => {
+      setShowLocationModal(true);
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, []);
-
-  useEffect(() => {
-    if (!mounted) return;
-
-    // Always show modal when website loads
-    setShowLocationModal(true);
-  }, [mounted]);
 
   const handleLocationClose = (decision: DeliveryInfo | null) => {
     setShowLocationModal(false);
@@ -42,6 +42,11 @@ export default function LocationProvider() {
       }
     }
   };
+
+  // Don't render until mounted to avoid hydration mismatch
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <LocationModal

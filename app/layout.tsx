@@ -8,6 +8,12 @@ export const metadata: Metadata = {
   description:
     'Experience authentic Pakistani cuisine at The Pan N Grill in Jhang. Fresh pizzas, shawarmas, burgers, and traditional dishes. Order online or visit us at Adhiwal Chowk.',
   keywords: 'Pakistani restaurant, Jhang, pizza, shawarma, burger, authentic cuisine, delivery',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+  },
   openGraph: {
     title: 'The Pan N Grill - Authentic Pakistani Taste',
     description:

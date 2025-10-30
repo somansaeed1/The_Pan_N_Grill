@@ -11,8 +11,15 @@ function NavbarContent() {
   const { getTotalItems, setIsCartOpen } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    
     let ticking = false;
 
     const handleScroll = () => {
@@ -27,9 +34,11 @@ function NavbarContent() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [mounted]);
 
   useEffect(() => {
+    if (!mounted) return;
+    
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isMobileMenuOpen) {
         setIsMobileMenuOpen(false);
@@ -38,7 +47,7 @@ function NavbarContent() {
 
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
-  }, [isMobileMenuOpen]);
+  }, [isMobileMenuOpen, mounted]);
 
   const navItems = [
     { id: '/', label: 'Home' },
@@ -61,20 +70,20 @@ function NavbarContent() {
         <div className="flex justify-between items-center h-16 md:h-20">
           {/* Logo */}
           <motion.div 
-            className="flex-shrink-0 flex items-center gap-2"
+            className="flex-shrink-0 flex items-center gap-1 sm:gap-2"
             whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
           >
             <motion.img
               src="/images/pan_n_grill_logo.jpg"
               alt="The Pan N Grill Logo"
-              className="h-16 w-16 md:h-16 md:w-16 object-contain"
+              className="h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 object-contain"
               whileHover={{ rotate: 5 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             />
             <Link
               href="/"
-              className="text-xl sm:text-2xl md:text-3xl font-logo font-normal text-primary-900 hover:text-primary-700 transition-colors"
+              className="text-base sm:text-xl md:text-2xl lg:text-3xl font-logo font-normal text-primary-900 hover:text-primary-700 transition-colors whitespace-nowrap"
             >
               The Pan N Grill
             </Link>

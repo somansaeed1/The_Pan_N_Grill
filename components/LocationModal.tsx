@@ -116,10 +116,10 @@ export default function LocationModal({ open, onClose }: LocationModalProps) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-4">
-      <div className="bg-white rounded-lg max-w-lg w-full p-6 shadow-lg max-h-[85vh] overflow-auto">
-        <h3 className="text-xl font-bold mb-2">Where are you located?</h3>
-        <p className="text-gray-600 mb-4">
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg max-w-lg w-full p-5 sm:p-6 shadow-lg max-h-[90vh] sm:max-h-[85vh] overflow-auto">
+        <h3 className="text-lg sm:text-xl font-bold mb-2">Where are you located?</h3>
+        <p className="text-sm sm:text-base text-gray-600 mb-4">
           We need your location to determine delivery availability and any minimum order requirements.
         </p>
 
@@ -130,7 +130,7 @@ export default function LocationModal({ open, onClose }: LocationModalProps) {
           <button
             onClick={handleAutoDetect}
             disabled={loading}
-            className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-400 text-white py-2 rounded transition-colors"
+            className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-400 text-white py-3 sm:py-2 rounded transition-colors text-sm sm:text-base font-medium min-h-[48px] touch-manipulation"
           >
             {loading ? 'Getting location...' : 'Use my device location'}
           </button>
@@ -168,12 +168,12 @@ export default function LocationModal({ open, onClose }: LocationModalProps) {
 
 
 
-        <div className="flex justify-between items-center mt-4">
+        <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center mt-4 gap-3 sm:gap-0">
           <button
             onClick={() =>
               onClose({ distanceKm: null, allowed: true, minOrder: 0, message: 'Location not provided' })
             }
-            className="text-sm text-gray-600 hover:text-gray-800"
+            className="text-sm sm:text-base text-gray-600 hover:text-gray-800 py-2 min-h-[44px] touch-manipulation order-2 sm:order-1"
           >
             Skip for now
           </button>
@@ -202,7 +202,7 @@ export default function LocationModal({ open, onClose }: LocationModalProps) {
                 }
                 onClose(decision);
               }}
-              className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded text-sm transition-colors"
+              className="px-4 py-2.5 sm:py-2 bg-green-500 hover:bg-green-600 text-white rounded text-sm sm:text-base transition-colors min-h-[48px] touch-manipulation order-1 sm:order-2"
             >
               Continue with Location
             </button>

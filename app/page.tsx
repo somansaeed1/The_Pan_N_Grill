@@ -1,9 +1,16 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 export default function HomePage() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const featuredCategories = [
     {
       id: 'special-pizza',
@@ -36,26 +43,30 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700 hero-pattern">
         <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
-          <div className="text-center">
-            <motion.h1 
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 md:py-24 lg:py-32">
+          <div className="w-full text-center">
+            <motion.div 
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold text-white mb-6"
+              className="mb-4 sm:mb-6"
             >
-              Welcome to <motion.span 
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-heading font-bold text-white text-center mx-auto">
+                Welcome to
+              </h1>
+              <motion.div 
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-                className="font-logo text-gold-400 text-5xl md:text-7xl lg:text-8xl"
-              >The Pan N Grill</motion.span>
-            </motion.h1>
+                className="font-logo text-gold-400 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl mt-2 text-center mx-auto block"
+                style={{ textAlign: 'center', display: 'block', width: '100%' }}
+              >The Pan N Grill</motion.div>
+            </motion.div>
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
-              className="text-xl md:text-2xl text-white mb-8 max-w-3xl mx-auto"
+              className="text-lg sm:text-xl md:text-2xl text-white mb-4 sm:mb-6 md:mb-8 max-w-3xl mx-auto text-center"
             >
               Authentic Pakistani Taste in the Heart of Jhang
             </motion.p>
@@ -63,7 +74,7 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.7, ease: "easeOut" }}
-              className="text-lg text-gray-200 mb-12 max-w-2xl mx-auto"
+              className="text-base sm:text-lg text-gray-200 mb-8 sm:mb-10 md:mb-12 max-w-2xl mx-auto text-center"
             >
               Experience the finest Pakistani cuisine with our signature pizzas, shawarmas, burgers,
               and traditional dishes. Made with love, served with pride.
@@ -72,7 +83,7 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.9, ease: "easeOut" }}
-              className="flex flex-col sm:flex-row gap-4 justify-center"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center"
             >
               <motion.div
                 whileHover={{ scale: 1.05 }}
@@ -81,7 +92,7 @@ export default function HomePage() {
               >
                 <Link
                   href="/menu"
-                  className="bg-gold-500 hover:bg-gold-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
+                  className="block w-full sm:w-auto bg-gold-500 hover:bg-gold-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl text-center"
                 >
                   Explore Our Menu
                 </Link>
@@ -93,7 +104,7 @@ export default function HomePage() {
               >
                 <Link
                   href="/contact"
-                  className="border-2 border-white text-white hover:bg-white hover:text-primary-900 px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300"
+                  className="block w-full sm:w-auto border-2 border-white text-white hover:bg-white hover:text-primary-900 px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-semibold transition-all duration-300 text-center"
                 >
                   Order Now
                 </Link>
@@ -122,7 +133,7 @@ export default function HomePage() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
             {featuredCategories.map((category, index) => (
               <motion.div
                 key={category.id}
@@ -141,7 +152,7 @@ export default function HomePage() {
                   href={`/menu#${category.id}`}
                   className="featured-card group bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 card-shadow cursor-pointer flex flex-col h-full hover:shadow-2xl"
                 >
-                  <div className="h-48 overflow-hidden">
+                  <div className="h-48 sm:h-56 md:h-48 overflow-hidden">
                     <motion.img
                       src={category.image}
                       alt={category.name}
@@ -150,14 +161,14 @@ export default function HomePage() {
                       transition={{ duration: 0.3 }}
                     />
                   </div>
-                  <div className="p-6 flex-1 flex flex-col">
-                    <h3 className="text-xl font-heading font-semibold text-primary-900 mb-2">
+                  <div className="p-4 sm:p-5 md:p-6 flex-1 flex flex-col">
+                    <h3 className="text-lg sm:text-xl font-heading font-semibold text-primary-900 mb-2">
                       {category.name}
                     </h3>
-                    <p className="text-gray-600 mb-4 flex-1">{category.description}</p>
-                    <div className="mt-4">
+                    <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4 flex-1">{category.description}</p>
+                    <div className="mt-2 sm:mt-4">
                       <motion.span 
-                        className="text-gold-500 group-hover:text-gold-600 font-semibold transition-colors inline-flex items-center"
+                        className="text-sm sm:text-base text-gold-500 group-hover:text-gold-600 font-semibold transition-colors inline-flex items-center"
                         whileHover={{ x: 5 }}
                         transition={{ type: "spring", stiffness: 400, damping: 17 }}
                       >
