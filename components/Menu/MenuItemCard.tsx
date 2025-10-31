@@ -66,8 +66,16 @@ export default function MenuItemCard({ item }: MenuItemCardProps) {
           {item.name}
         </h3>
         
-        <div className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 leading-relaxed line-clamp-2">
+        <div 
+          className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 leading-relaxed line-clamp-2 cursor-help relative group"
+          title={item.description}
+        >
           {item.description}
+          {/* Tooltip on hover */}
+          <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block w-64 sm:w-80 bg-gray-900 text-white text-xs sm:text-sm p-3 rounded-lg shadow-xl z-50 pointer-events-none">
+            <div className="leading-relaxed">{item.description}</div>
+            <div className="absolute left-4 top-full w-0 h-0 border-l-8 border-r-8 border-t-8 border-transparent border-t-gray-900"></div>
+          </div>
         </div>
 
         {item.sizes && (
