@@ -1,4 +1,3 @@
-### There is a markdown file with a title "Execution Steps" in the zip file named "pan-n-grill-nextjs___admin-panel" that has all the instructions to run the project.
 # Pan N Grill - Next.js Restaurant Website
 
 A modern restaurant website built with Next.js, featuring menu display, cart functionality, and delivery zone management.
