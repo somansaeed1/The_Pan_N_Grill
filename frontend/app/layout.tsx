@@ -1,11 +1,11 @@
 import type { Metadata, Viewport } from 'next';
-import { Oswald, Inter } from 'next/font/google';
+import { Anton, Barlow } from 'next/font/google';
 import './globals.css';
 import { CartProvider } from '@/components/Cart/CartProvider';
 import LayoutShell from '@/components/LayoutShell';
 
-const heading = Oswald({ subsets: ['latin'], variable: '--font-heading', display: 'swap' });
-const body = Inter({ subsets: ['latin'], variable: '--font-body', display: 'swap' });
+const heading = Anton({ subsets: ['latin'], weight: '400', variable: '--font-heading', display: 'swap' });
+const body = Barlow({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-body', display: 'swap' });
 
 export const metadata: Metadata = {
   title: 'The Pan N Grill',

@@ -19,11 +19,13 @@
 
   h1, h2, h3, .font-heading, .font-logo {
     font-family: var(--font-heading);
-    letter-spacing: 0.01em;
+    font-weight: 400;
+    font-synthesis: none;
+    letter-spacing: 0.02em;
   }
 
   :focus-visible {
-    outline: 2px solid #d62828;
+    outline: 2px solid #e4002b;
     outline-offset: 2px;
   }
 
@@ -39,10 +41,13 @@
 
 @layer components {
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 min-h-[44px] text-sm font-bold uppercase tracking-wide transition active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 min-h-[44px] text-base font-bold uppercase tracking-wide transition active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed;
   }
   .btn-primary {
     @apply btn bg-primary-600 text-white shadow-card hover:bg-primary-700;
+  }
+  .btn-white {
+    @apply btn bg-white text-primary-600 shadow-card hover:bg-gray-100;
   }
   .btn-gold {
     @apply btn bg-gold-400 text-primary-900 shadow-card hover:bg-gold-500;
@@ -51,7 +56,11 @@
     @apply btn border-2 border-white text-white hover:bg-white hover:text-primary-900;
   }
   .section-title {
-    @apply text-3xl sm:text-4xl font-bold uppercase text-primary-900;
+    @apply text-4xl sm:text-5xl uppercase text-primary-900;
+  }
+  .stripes {
+    height: 14px;
+    background: repeating-linear-gradient(90deg, #e4002b 0 28px, #fff 28px 56px);
   }
   .container-page {
     @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;

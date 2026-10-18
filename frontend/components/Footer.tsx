@@ -5,6 +5,7 @@ import { NAV_ITEMS, SITE } from '@/lib/site';
 export default function Footer() {
   return (
     <footer className="bg-primary-900 text-gray-300">
+      <div className="stripes" aria-hidden="true" />
       <div className="container-page grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
         <div className="lg:col-span-2">
           <h3 className="font-heading text-2xl font-bold uppercase text-gold-400">{SITE.name}</h3>

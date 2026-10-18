@@ -19,23 +19,25 @@ const PERKS = [
 export default function HomePage() {
   return (
     <div className="pt-16">
-      <section className="relative flex min-h-[85vh] items-center overflow-hidden bg-primary-900">
-        <Image src="/images/2.png" alt="" fill priority className="object-cover opacity-60" />
-        <div className="absolute inset-0 bg-gradient-to-r from-primary-900 via-primary-900/70 to-transparent" />
+      <section className="relative flex min-h-[80vh] items-center overflow-hidden bg-primary-600">
+        <Image src="/images/2.png" alt="" fill priority className="object-cover opacity-40 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary-600 via-primary-600/80 to-transparent" />
         <div className="container-page relative py-20">
-          <p className="mb-3 inline-block rounded-full bg-gold-400 px-4 py-1 text-xs font-bold uppercase tracking-widest text-primary-900">
+          <p className="mb-3 inline-block rounded-full bg-white px-4 py-1 text-sm font-bold uppercase tracking-widest text-primary-600">
             Jhang&apos;s favourite grill
           </p>
-          <h1 className="max-w-3xl text-5xl font-bold uppercase leading-[1.05] text-white sm:text-6xl lg:text-7xl">
+          <h1 className="max-w-3xl text-6xl uppercase leading-[1.02] text-white sm:text-7xl lg:text-8xl">
             Hot, fresh &amp; <span className="text-gold-400">full of flavour</span>
           </h1>
           <p className="mt-5 max-w-xl text-lg text-gray-200">{SITE.tagline}. Pizzas, shawarmas, burgers and more.</p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link href="/menu" className="btn-primary">Order now</Link>
+            <Link href="/menu" className="btn-white">Order now</Link>
             <Link href="/contact" className="btn-outline">Find us</Link>
           </div>
         </div>
       </section>
+
+      <div className="stripes" aria-hidden="true" />
 
       <section className="bg-cream py-16">
         <div className="container-page">
@@ -51,7 +53,7 @@ export default function HomePage() {
                   <Image src={cat.image} alt={cat.name} fill sizes="(min-width:1024px) 25vw, 50vw" className="object-cover transition duration-500 group-hover:scale-110" />
                 </div>
                 <div className="p-4">
-                  <h3 className="text-lg font-bold uppercase text-primary-900">{cat.name}</h3>
+                  <h3 className="text-xl uppercase text-primary-900">{cat.name}</h3>
                   <p className="mt-1 text-sm text-gray-600">{cat.blurb}</p>
                   <span className="mt-3 inline-block text-sm font-bold uppercase text-primary-600">Order &rarr;</span>
                 </div>
@@ -88,10 +90,10 @@ export default function HomePage() {
 
       <section className="bg-primary-900 py-16 text-white">
         <div className="container-page">
-          <h2 className="text-center text-3xl font-bold uppercase sm:text-4xl">Visit us today</h2>
+          <h2 className="text-center text-4xl uppercase sm:text-5xl">Visit us today</h2>
           <div className="mt-10 grid gap-8 text-center md:grid-cols-3">
             <div>
-              <h3 className="text-xl font-bold uppercase text-gold-400">Location</h3>
+              <h3 className="text-2xl uppercase text-gold-400">Location</h3>
               <p className="mt-2 text-gray-300">
                 {SITE.address[0]}
                 <br />
@@ -99,7 +101,7 @@ export default function HomePage() {
               </p>
             </div>
             <div>
-              <h3 className="text-xl font-bold uppercase text-gold-400">Phone</h3>
+              <h3 className="text-2xl uppercase text-gold-400">Phone</h3>
               <p className="mt-2 text-gray-300">
                 {SITE.phones.map((phone) => (
                   <a key={phone.href} href={phone.href} className="block hover:text-gold-400">{phone.label}</a>
@@ -107,7 +109,7 @@ export default function HomePage() {
               </p>
             </div>
             <div>
-              <h3 className="text-xl font-bold uppercase text-gold-400">Follow us</h3>
+              <h3 className="text-2xl uppercase text-gold-400">Follow us</h3>
               <div className="mt-3 flex justify-center gap-3">
                 <a href={SITE.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="rounded-full bg-white/10 p-3 hover:bg-primary-600">
                   <FacebookIcon className="h-6 w-6" />

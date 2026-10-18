@@ -85,10 +85,10 @@ export default function MenuPage() {
   return (
     <div className="pt-20">
       {/* Menu Header */}
-      <section className="bg-primary-900 text-white py-12 sm:py-16">
+      <section className="bg-primary-600 py-12 text-white sm:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl font-bold uppercase sm:text-5xl mb-3">Our Menu</h1>
-          <p className="text-base sm:text-lg md:text-xl text-gray-200 max-w-2xl mx-auto">
+          <h1 className="text-5xl uppercase sm:text-6xl mb-3">Our Menu</h1>
+          <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-2xl mx-auto">
             Discover our authentic Pakistani cuisine with traditional flavors and modern presentation
           </p>
         </div>
