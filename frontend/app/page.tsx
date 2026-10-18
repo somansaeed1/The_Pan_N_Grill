@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { FacebookIcon, WhatsAppIcon } from '@/components/icons';
 import { SITE } from '@/lib/site';
 
 const SPECIALTIES = [
@@ -13,39 +12,57 @@ const SPECIALTIES = [
 export default function HomePage() {
   return (
     <div className="pt-16">
-      <section className="bg-cream">
-        <div className="mx-auto grid max-w-7xl lg:grid-cols-2">
-          <div className="flex flex-col justify-center px-4 py-12 sm:px-8 lg:py-20 lg:pl-8 lg:pr-12">
-            <p className="text-sm font-bold uppercase tracking-widest text-primary-600">
-              Adhiwal Chowk &middot; Jhang
-            </p>
-            <h1 className="mt-3 text-5xl uppercase leading-[1.02] text-primary-900 sm:text-6xl xl:text-7xl">
-              Pizza, shawarma <span className="text-primary-600">&amp; burgers</span>, made to order
-            </h1>
-            <p className="mt-5 max-w-lg text-lg text-primary-800/80">
-              Authentic Pakistani taste in the heart of Jhang. Order online for delivery or pick it up at the shop.
-            </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link href="/menu" className="btn-primary">Order online</Link>
-              <Link href="/contact" className="btn border-2 border-primary-900 text-primary-900 hover:bg-primary-900 hover:text-white">
-                Find us
-              </Link>
-            </div>
-          </div>
+      <section className="relative isolate flex min-h-[540px] items-center overflow-hidden bg-primary-900 lg:min-h-[620px]">
+        <Image
+          src="/images/2.png"
+          alt="The Pan N Grill shop front at Adhiwal Chowk"
+          fill
+          priority
+          sizes="100vw"
+          className="-z-20 object-cover object-center"
+        />
+        <div className="absolute inset-0 -z-10 bg-primary-900/65 lg:bg-gradient-to-r lg:from-primary-900/95 lg:via-primary-900/70 lg:to-primary-900/10" />
 
-          <div className="relative min-h-[300px] lg:min-h-[560px]">
-            <Image
-              src="/images/2.png"
-              alt="The Pan N Grill shop front at Adhiwal Chowk"
-              fill
-              priority
-              sizes="(min-width:1024px) 50vw, 100vw"
-              className="object-cover"
-            />
+        <div className="container-page py-16">
+          <p className="inline-block border-l-4 border-primary-600 pl-3 text-sm font-bold uppercase tracking-widest text-gold-400">
+            Adhiwal Chowk, Jhang
+          </p>
+          <h1 className="mt-4 max-w-2xl text-5xl uppercase leading-[1.05] text-white sm:text-6xl lg:text-7xl">
+            Real Pakistani taste, <span className="text-gold-400">made fresh</span> to order
+          </h1>
+          <p className="mt-5 max-w-lg text-lg text-stone-200">
+            Pizzas, shawarmas and burgers from our kitchen to your door, or come and sit with us.
+          </p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Link href="/menu" className="btn-primary">Order online</Link>
+            <Link href="/contact" className="btn border-2 border-white text-white hover:bg-white hover:text-primary-900">
+              Visit the shop
+            </Link>
           </div>
         </div>
       </section>
-      <div className="stripes" aria-hidden="true" />
+
+      <div className="bg-primary-600 text-white">
+        <ul className="container-page grid divide-white/20 py-4 text-sm sm:grid-cols-3 sm:divide-x">
+          <li className="py-2 sm:px-6 sm:first:pl-0">
+            <span className="block text-xs font-bold uppercase tracking-widest text-white/70">Address</span>
+            {SITE.address[0]}, {SITE.address[1]}
+          </li>
+          <li className="py-2 sm:px-6">
+            <span className="block text-xs font-bold uppercase tracking-widest text-white/70">Call to order</span>
+            {SITE.phones.map((phone, i) => (
+              <span key={phone.href}>
+                {i > 0 && ' / '}
+                <a href={phone.href} className="font-semibold hover:underline">{phone.label}</a>
+              </span>
+            ))}
+          </li>
+          <li className="py-2 sm:px-6">
+            <span className="block text-xs font-bold uppercase tracking-widest text-white/70">Delivery</span>
+            Across Jhang, cash on delivery
+          </li>
+        </ul>
+      </div>
 
       <section className="py-16">
         <div className="container-page">
@@ -94,37 +111,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-primary-900 py-14 text-white">
-        <div className="container-page grid gap-8 text-center md:grid-cols-3 md:text-left">
-          <div>
-            <h3 className="text-2xl uppercase text-gold-400">Find us</h3>
-            <p className="mt-2 text-gray-300">
-              {SITE.address[0]}
-              <br />
-              {SITE.address[1]}
-            </p>
-          </div>
-          <div>
-            <h3 className="text-2xl uppercase text-gold-400">Call to order</h3>
-            <p className="mt-2 text-gray-300">
-              {SITE.phones.map((phone) => (
-                <a key={phone.href} href={phone.href} className="block hover:text-gold-400">{phone.label}</a>
-              ))}
-            </p>
-          </div>
-          <div>
-            <h3 className="text-2xl uppercase text-gold-400">Follow us</h3>
-            <div className="mt-3 flex justify-center gap-3 md:justify-start">
-              <a href={SITE.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="rounded-full bg-white/10 p-3 hover:bg-primary-600">
-                <FacebookIcon className="h-5 w-5" />
-              </a>
-              <a href={SITE.whatsapp.href} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="rounded-full bg-white/10 p-3 hover:bg-primary-600">
-                <WhatsAppIcon className="h-5 w-5" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
