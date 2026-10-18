@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useState, ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState, ReactNode } from 'react';
 import { AddOn, CartItem } from '@/types';
 import { CartSummary, getTotalItems, makeLineId, showToast, summarize } from '@/lib/cartUtils';
 import { MAX_LINE_QUANTITY } from '@/lib/catalog';
@@ -83,6 +83,8 @@ interface CartContextType {
   clearCart: () => void;
   getTotalItems: () => number;
   getTotalPrice: () => number;
+  /** False until the saved cart has been read from the browser. */
+  isReady: boolean;
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
 }
@@ -110,13 +112,32 @@ export function CartProvider({ children }: { children: ReactNode }) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(cartItems));
       localStorage.removeItem(LEGACY_STORAGE_KEY);
     } catch {
-      showToast('Unable to save your cart on this device.', 'error');
+      showToast('Your cart could not be saved on this device, so it may be empty if you reload. Check that private browsing is off.', 'error', { title: 'Cart not saved' });
     }
   }, [cartItems, hydrated]);
 
+  const itemsRef = useRef(cartItems);
+  itemsRef.current = cartItems;
+
   const addToCart = useCallback((item: AddToCartInput) => {
+    const addOns = item.addOns ?? [];
+    const existing = itemsRef.current.find((i) => i.lineId === makeLineId(item.id, item.size, addOns));
+
+    if (existing && existing.quantity >= MAX_LINE_QUANTITY) {
+      showToast(`You can order up to ${MAX_LINE_QUANTITY} of the same item online. Call us for larger orders.`, 'error', {
+        title: `Limit reached for ${item.name}`,
+      });
+      return;
+    }
+
     dispatch({ type: 'add', item });
-    showToast(`${item.name} added to cart`);
+
+    const details = [item.size !== 'regular' ? item.size : '', ...addOns.map((a) => a.name)].filter(Boolean).join(', ');
+    const label = details ? `${item.name} (${details})` : item.name;
+    showToast(existing ? `${label} quantity is now ${existing.quantity + 1}.` : `${label} is in your cart.`, 'success', {
+      title: 'Added to cart',
+      action: { label: 'View cart', onClick: () => setIsCartOpen(true) },
+    });
   }, []);
   const removeFromCart = useCallback((lineId: string) => dispatch({ type: 'remove', lineId }), []);
   const updateQuantity = useCallback(
@@ -136,10 +157,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
       clearCart,
       getTotalItems: () => getTotalItems(cartItems),
       getTotalPrice: () => summary.total,
+      isReady: hydrated,
       isCartOpen,
       setIsCartOpen,
     };
-  }, [cartItems, isCartOpen, addToCart, removeFromCart, updateQuantity, clearCart]);
+  }, [cartItems, hydrated, isCartOpen, addToCart, removeFromCart, updateQuantity, clearCart]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

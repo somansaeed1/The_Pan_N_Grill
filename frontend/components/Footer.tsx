@@ -49,7 +49,7 @@ export default function Footer() {
               </li>
             ))}
             <li>
-              <Link href="/delivery-zone" className={linkClass}>Delivery area</Link>
+              <Link href="/delivery-zone" className={linkClass}>Delivery zone</Link>
             </li>
           </ul>
         </nav>
@@ -71,7 +71,7 @@ export default function Footer() {
             </p>
             <p>
               <span className="block text-xs font-bold uppercase tracking-widest text-gold-400">Delivery</span>
-              Across Jhang, cash on delivery
+              Across Jhang
             </p>
           </address>
         </div>

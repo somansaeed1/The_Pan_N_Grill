@@ -28,7 +28,7 @@ export default function CartDrawer() {
 
   const goToCheckout = () => {
     if (cartItems.length === 0) {
-      showToast('Your cart is empty', 'error');
+      showToast('Add something from the menu before checking out.', 'error', { title: 'Your cart is empty' });
       return;
     }
     setIsCartOpen(false);
@@ -107,7 +107,7 @@ export default function CartDrawer() {
               <button
                 onClick={() => {
                   clearCart();
-                  showToast('Cart cleared');
+                  showToast('All items were removed from your cart.', 'info', { title: 'Cart cleared' });
                 }}
                 className="w-full py-1 text-sm font-semibold text-gray-500 hover:text-primary-600"
               >

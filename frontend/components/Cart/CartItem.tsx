@@ -26,7 +26,7 @@ export default function CartItem({ item, onUpdateQuantity, onRemove }: CartItemP
           <button
             onClick={() => {
               onRemove(item.lineId);
-              showToast(`${item.name} removed`);
+              showToast(`${item.name} was removed from your cart.`, 'info', { title: 'Item removed' });
             }}
             className="-mr-1 -mt-1 rounded-full p-2 text-gray-400 hover:bg-primary-50 hover:text-primary-600"
             aria-label={`Remove ${item.name}`}

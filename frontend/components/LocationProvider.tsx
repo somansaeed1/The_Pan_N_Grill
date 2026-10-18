@@ -11,9 +11,15 @@ export default function LocationProvider() {
   useEffect(() => {
     setMounted(true);
     
+    // Only ask when we do not already know the customer's choice.
+    let alreadyAnswered = false;
+    try {
+      alreadyAnswered = localStorage.getItem('panngrill-location') !== null;
+    } catch {}
+
     // Show modal after a small delay to avoid hydration mismatch
     const timer = setTimeout(() => {
-      setShowLocationModal(true);
+      if (!alreadyAnswered) setShowLocationModal(true);
     }, 100);
 
     return () => clearTimeout(timer);

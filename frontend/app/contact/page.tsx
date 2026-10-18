@@ -33,7 +33,7 @@ export default function ContactPage() {
 
     // Open WhatsApp in a new tab (client-side only)
     window.open(whatsappUrl, '_blank');
-    showToast('Redirecting to WhatsApp...');
+    showToast('Your message is ready in WhatsApp. Press send there to deliver it.', 'info', { title: 'Opening WhatsApp' });
 
     // Reset form
     setFormData({
