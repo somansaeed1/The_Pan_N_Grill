@@ -13,7 +13,7 @@
   body {
     font-family: var(--font-body);
     color: #292524;
-    background: #fff;
+    background: #fffdf9;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -25,7 +25,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid #e4002b;
+    outline: 2px solid #d4202a;
     outline-offset: 2px;
   }
 
@@ -59,8 +59,8 @@
     @apply text-4xl sm:text-5xl uppercase text-primary-900;
   }
   .stripes {
-    height: 14px;
-    background: repeating-linear-gradient(90deg, #e4002b 0 28px, #fff 28px 56px);
+    height: 10px;
+    background: repeating-linear-gradient(90deg, #d4202a 0 24px, #faf1e1 24px 48px);
   }
   .container-page {
     @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
