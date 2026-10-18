@@ -9,6 +9,49 @@ const SPECIALTIES = [
   { id: 'fried-items', name: 'Fried Items', image: '/images/Fried.jpg', blurb: 'Crispy and delicious fried chicken and broast' },
 ];
 
+const iconProps = { className: 'h-5 w-5', fill: 'none', stroke: 'currentColor', strokeWidth: 2, viewBox: '0 0 24 24', 'aria-hidden': true } as const;
+
+const INFO = [
+  {
+    label: 'Address',
+    icon: (
+      <svg {...iconProps}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+    ),
+    content: (
+      <>
+        {SITE.address[0]}, {SITE.address[1]}
+      </>
+    ),
+  },
+  {
+    label: 'Call to order',
+    icon: (
+      <svg {...iconProps}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.95.68l1.5 4.49a1 1 0 01-.5 1.21l-2.26 1.13a11 11 0 005.52 5.52l1.13-2.26a1 1 0 011.21-.5l4.49 1.5a1 1 0 01.68.95V19a2 2 0 01-2 2h-1C9.72 21 3 14.28 3 6V5z" />
+      </svg>
+    ),
+    content: (
+      <>
+        {SITE.phones.map((phone) => (
+          <a key={phone.href} href={phone.href} className="block font-semibold hover:text-primary-600">{phone.label}</a>
+        ))}
+      </>
+    ),
+  },
+  {
+    label: 'Delivery',
+    icon: (
+      <svg {...iconProps}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 7h11v9H3zM14 10h4l3 3v3h-7M7 19a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM17 19a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+      </svg>
+    ),
+    content: <>Across Jhang, cash on delivery</>,
+  },
+];
+
 export default function HomePage() {
   return (
     <div className="pt-16">
@@ -23,7 +66,7 @@ export default function HomePage() {
         />
         <div className="absolute inset-0 -z-10 bg-primary-900/65 lg:bg-gradient-to-r lg:from-primary-900/95 lg:via-primary-900/70 lg:to-primary-900/10" />
 
-        <div className="container-page py-16">
+        <div className="container-page pb-24 pt-16">
           <p className="inline-block border-l-4 border-primary-600 pl-3 text-sm font-bold uppercase tracking-widest text-gold-400">
             Adhiwal Chowk, Jhang
           </p>
@@ -42,29 +85,23 @@ export default function HomePage() {
         </div>
       </section>
 
-      <div className="bg-primary-600 text-white">
-        <ul className="container-page grid divide-white/20 py-4 text-sm sm:grid-cols-3 sm:divide-x">
-          <li className="py-2 sm:px-6 sm:first:pl-0">
-            <span className="block text-xs font-bold uppercase tracking-widest text-white/70">Address</span>
-            {SITE.address[0]}, {SITE.address[1]}
-          </li>
-          <li className="py-2 sm:px-6">
-            <span className="block text-xs font-bold uppercase tracking-widest text-white/70">Call to order</span>
-            {SITE.phones.map((phone, i) => (
-              <span key={phone.href}>
-                {i > 0 && ' / '}
-                <a href={phone.href} className="font-semibold hover:underline">{phone.label}</a>
+      <div className="container-page relative z-10 -mt-10">
+        <ul className="grid divide-y divide-primary-900/10 rounded-lg bg-white shadow-lift sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+          {INFO.map(({ label, icon, content }) => (
+            <li key={label} className="flex items-start gap-3 p-5">
+              <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-50 text-primary-600">
+                {icon}
               </span>
-            ))}
-          </li>
-          <li className="py-2 sm:px-6">
-            <span className="block text-xs font-bold uppercase tracking-widest text-white/70">Delivery</span>
-            Across Jhang, cash on delivery
-          </li>
+              <div className="text-sm text-primary-800">
+                <span className="block text-xs font-bold uppercase tracking-widest text-primary-600">{label}</span>
+                {content}
+              </div>
+            </li>
+          ))}
         </ul>
       </div>
 
-      <section className="py-16">
+      <section className="pb-16 pt-20">
         <div className="container-page">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="section-title">Our Specialties</h2>

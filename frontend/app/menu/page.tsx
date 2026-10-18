@@ -50,7 +50,6 @@ export default function MenuPage() {
           </p>
         </div>
       </section>
-      <div className="stripes" aria-hidden="true" />
 
       <div className="menu-category-nav border-b bg-white shadow-sm">
         <div className="container-page space-y-3 py-3">

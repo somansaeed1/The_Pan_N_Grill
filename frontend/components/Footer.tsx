@@ -9,7 +9,6 @@ const headingClass = 'mb-3 text-lg uppercase tracking-wide text-white';
 export default function Footer() {
   return (
     <footer className="bg-primary-900 text-sm text-stone-300">
-      <div className="stripes" aria-hidden="true" />
 
       <div className="container-page grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
         <div>
