@@ -21,7 +21,7 @@ const MenuCategory = forwardRef<HTMLElement, MenuCategoryProps>(
     // Use fixed grid classes instead of dynamic ones for Tailwind
     return (
       <section ref={ref} className="mb-12 sm:mb-14 md:mb-16">
-        <h2 className="text-2xl sm:text-3xl font-heading font-bold text-primary-900 mb-6 sm:mb-8 border-b-2 border-gold-500 pb-3 sm:pb-4">
+        <h2 className="section-title mb-6 inline-block border-b-4 border-primary-600 pb-3">
           {category.name}
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5 md:gap-6">
