@@ -95,18 +95,24 @@ export default function CheckoutPage() {
     const firstField = (['fullName', 'phone', 'deliveryAddress', 'orderNotes'] as const).find((f) => found[f]);
     if (firstField) {
       formRef.current?.querySelector<HTMLElement>(`#${firstField}`)?.focus();
-      showToast('Please fix the highlighted fields.', 'error');
+      showToast('Some details are missing or incorrect. Check the highlighted fields.', 'error', { title: 'Cannot place order yet' });
       return;
     }
     if (found.cart || found.delivery) {
-      showToast(found.cart ?? found.delivery!, 'error');
+      showToast(found.cart ?? found.delivery!, 'error', { title: found.cart ? 'Your cart is empty' : 'Delivery problem' });
       return;
     }
 
     setSubmitting(true);
     const whatsappUrl = buildWhatsAppUrl(buildWhatsAppMessage(form, cartItems, summary));
     // Opened synchronously from the click so browsers do not treat it as a blocked pop-up.
-    window.open(whatsappUrl, '_blank', 'noopener');
+    const whatsappTab = window.open(whatsappUrl, '_blank');
+    if (whatsappTab) {
+      whatsappTab.opener = null;
+      showToast('Press send in WhatsApp to confirm your order.', 'success', { title: 'Order opened in WhatsApp' });
+    } else {
+      showToast('Your browser blocked the WhatsApp window. Use the button on the next screen to open it.', 'error', { title: 'WhatsApp did not open' });
+    }
 
     setPlacedOrder({ name: form.fullName.trim(), method: form.method, itemCount, total: summary.total, whatsappUrl });
     clearCart();
@@ -240,7 +246,7 @@ export default function CheckoutPage() {
                     {errors.delivery ?? deliveryProblem}{' '}
                     {!hasLocation && (
                       <Link href="/delivery-zone" className="font-bold text-primary-600 underline">
-                        Check delivery area
+                        Check delivery zone
                       </Link>
                     )}
                   </p>

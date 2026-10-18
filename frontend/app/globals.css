@@ -83,17 +83,6 @@
     animation: wiggle 1s ease-in-out infinite;
   }
 
-  /* Toast notifications (replaced by React toasts in a later change) */
-  .toast-notification {
-    transform: translateY(-20px);
-    opacity: 0;
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-    overflow-wrap: break-word;
-  }
-  .toast-notification.show {
-    transform: translateY(0);
-    opacity: 1;
-  }
 
   @keyframes float {
     0%, 100% { transform: translateY(0); }

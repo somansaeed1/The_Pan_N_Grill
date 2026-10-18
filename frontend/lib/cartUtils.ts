@@ -1,24 +1,18 @@
 import { AddOn, CartItem } from '@/types';
 
-export const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+export type ToastType = 'success' | 'error' | 'info';
+
+export interface ToastOptions {
+  title?: string;
+  action?: { label: string; onClick: () => void };
+}
+
+export const TOAST_EVENT = 'pan-toast';
+
+/** Shows a toast. Rendered by <ToastContainer /> in the layout. */
+export const showToast = (message: string, type: ToastType = 'success', options: ToastOptions = {}) => {
   if (typeof window === 'undefined') return;
-
-  const toastContainer = document.getElementById('toast-container');
-  if (!toastContainer) return;
-
-  const toast = document.createElement('div');
-  toast.className = `toast-notification px-4 py-3 rounded-xl shadow-lift text-white text-sm sm:text-base font-semibold text-center max-w-md w-full ${
-    type === 'success' ? 'bg-secondary-600' : 'bg-primary-600'
-  }`;
-  toast.textContent = message;
-  toast.setAttribute('role', 'alert');
-  toastContainer.appendChild(toast);
-
-  setTimeout(() => toast.classList.add('show'), 10);
-  setTimeout(() => {
-    toast.classList.remove('show');
-    setTimeout(() => toast.remove(), 300);
-  }, 3000);
+  window.dispatchEvent(new CustomEvent(TOAST_EVENT, { detail: { message, type, ...options } }));
 };
 
 export const makeLineId = (id: string, size: string, addOns: AddOn[]): string =>
