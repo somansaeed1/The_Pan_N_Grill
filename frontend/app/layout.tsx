@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { CartProvider } from '@/components/Cart/CartProvider';
 import LayoutShell from '@/components/LayoutShell';
@@ -8,12 +8,6 @@ export const metadata: Metadata = {
   description:
     'Experience authentic Pakistani cuisine at The Pan N Grill in Jhang. Fresh pizzas, shawarmas, burgers, and traditional dishes. Order online or visit us at Adhiwal Chowk.',
   keywords: 'Pakistani restaurant, Jhang, pizza, shawarma, burger, authentic cuisine, delivery',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-    userScalable: true,
-  },
   openGraph: {
     title: 'The Pan N Grill - Authentic Pakistani Taste',
     description:
@@ -30,6 +24,12 @@ export const metadata: Metadata = {
     locale: 'en_US',
     type: 'website',
   },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

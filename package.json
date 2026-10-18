@@ -1,31 +1,14 @@
 {
-  "name": "pan-n-grill-nextjs",
-  "version": "1.0.0",
+  "name": "pan-n-grill",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "install:all": "npm ci && npm ci --prefix backend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dev:backend": "npm run dev --prefix backend",
+    "build": "npm run build --prefix frontend",
+    "lint": "npm run lint --prefix frontend"
   },
-  "dependencies": {
-    "framer-motion": "^12.23.24",
-    "leaflet": "^1.9.4",
-    "next": "15.5.9",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0"
-  },
-  "devDependencies": {
-    "@eslint/eslintrc": "^3.0.0",
-    "@types/leaflet": "^1.9.21",
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "autoprefixer": "^10.0.1",
-    "eslint": "^8",
-    "eslint-config-next": "^15.5.5",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5"
-  }
+  "workspaces": [
+    "frontend"
+  ]
 }
