@@ -10,7 +10,9 @@ interface ToastItem extends ToastOptions {
 }
 
 const MAX_VISIBLE = 3;
-const DURATION: Record<ToastType, number> = { success: 4000, info: 4000, error: 7000 };
+const DURATION: Record<ToastType, number> = { success: 5000, info: 5000, error: 7000 };
+/** Toasts with a button stay longer so there is time to use it. */
+const ACTION_DURATION = 7000;
 
 const STYLES: Record<ToastType, { bar: string; icon: string; path: string }> = {
   success: { bar: 'border-secondary-600', icon: 'bg-secondary-100 text-secondary-700', path: 'M5 13l4 4L19 7' },
@@ -30,9 +32,9 @@ function Toast({ toast, onDismiss }: { toast: ToastItem; onDismiss: (id: number)
 
   useEffect(() => {
     if (paused) return;
-    const timer = setTimeout(() => onDismiss(toast.id), DURATION[toast.type]);
+    const timer = setTimeout(() => onDismiss(toast.id), toast.action ? ACTION_DURATION : DURATION[toast.type]);
     return () => clearTimeout(timer);
-  }, [paused, toast.id, toast.type, onDismiss]);
+  }, [paused, toast.id, toast.type, toast.action, onDismiss]);
 
   return (
     <div
