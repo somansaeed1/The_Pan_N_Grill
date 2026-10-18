@@ -10,6 +10,15 @@ export const SITE = {
   facebook: 'https://www.facebook.com/share/1AgzKa1R8s/',
 } as const;
 
+/** Deep links into the menu, used by the footer. */
+export const MENU_LINKS = [
+  { href: '/menu#deals', label: 'Deals' },
+  { href: '/menu#special-pizza', label: 'Pizzas' },
+  { href: '/menu#special-shawarmas', label: 'Shawarmas' },
+  { href: '/menu#chorizo-burger', label: 'Burgers' },
+  { href: '/menu#fried-items', label: 'Fried items' },
+] as const;
+
 export const NAV_ITEMS = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },

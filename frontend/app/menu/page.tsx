@@ -42,7 +42,7 @@ export default function MenuPage() {
 
   return (
     <div className="pt-16">
-      <section className="bg-primary-600 py-12 text-center text-white sm:py-16">
+      <section className="bg-primary-900 py-12 text-center text-white sm:py-16">
         <div className="container-page">
           <h1 className="mb-3 text-5xl uppercase sm:text-6xl">Our Menu</h1>
           <p className="mx-auto max-w-2xl text-lg text-white/90">
@@ -50,7 +50,6 @@ export default function MenuPage() {
           </p>
         </div>
       </section>
-      <div className="stripes" aria-hidden="true" />
 
       <div className="menu-category-nav border-b bg-white shadow-sm">
         <div className="container-page space-y-3 py-3">
