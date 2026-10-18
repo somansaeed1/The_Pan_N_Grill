@@ -58,14 +58,20 @@ export default function Footer() {
           <h3 className={headingClass}>Contact</h3>
           <address className="space-y-3 not-italic">
             <p>
+              <span className="block text-xs font-bold uppercase tracking-widest text-gold-400">Address</span>
               {SITE.address[0]}
               <br />
               {SITE.address[1]}
             </p>
             <p>
+              <span className="block text-xs font-bold uppercase tracking-widest text-gold-400">Call to order</span>
               {SITE.phones.map((phone) => (
                 <a key={phone.href} href={phone.href} className="block py-0.5 hover:text-gold-400">{phone.label}</a>
               ))}
+            </p>
+            <p>
+              <span className="block text-xs font-bold uppercase tracking-widest text-gold-400">Delivery</span>
+              Across Jhang, cash on delivery
             </p>
             <a href={SITE.whatsapp.href} target="_blank" rel="noopener noreferrer" className="btn-gold !px-5 !py-2 !text-sm">
               Order on WhatsApp
