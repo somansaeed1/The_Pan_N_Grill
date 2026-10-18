@@ -1,37 +1,18 @@
-# Pan N Grill - Next.js Restaurant Website
+# The Pan N Grill
 
-A modern restaurant website built with Next.js, featuring menu display, cart functionality, and delivery zone management.
+Monorepo with a Next.js `frontend/` and an Express `backend/`.
 
-## Quick Start
+## Develop
 
 ```bash
-npm install
-npm run dev
+npm run install:all
+npm run dev:frontend   # http://localhost:3000
+npm run dev:backend    # http://localhost:4000/api/health
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the website.
+## Vercel
 
-## Documentation
+The existing project deploys from the repo root; the root `vercel.json` points install, build and output at `frontend/`, so no dashboard change is needed.
+The backend deploys as its own Vercel project with Root Directory set to `backend`.
 
-All documentation files have been moved to the `docs/` folder:
-
-- `docs/README.md` - Main documentation
-- `docs/QUICK_START.md` - Quick start guide
-- `docs/ARCHITECTURE.md` - System architecture
-- `docs/CHANGELOG.md` - Version history
-- And more...
-
-## Features
-
-- 🍕 Menu display with categories
-- 🛒 Shopping cart functionality
-- 📍 Location-based delivery zones
-- 📱 Responsive design
-- ⚡ Fast loading with Next.js
-
-## Tech Stack
-
-- Next.js 14
-- TypeScript
-- Tailwind CSS
-- React Hooks
+Environment variables: see `frontend/env.example` and `backend/.env.example`.
