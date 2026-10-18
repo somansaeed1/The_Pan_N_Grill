@@ -1,7 +1,11 @@
 import type { Metadata, Viewport } from 'next';
+import { Oswald, Inter } from 'next/font/google';
 import './globals.css';
 import { CartProvider } from '@/components/Cart/CartProvider';
 import LayoutShell from '@/components/LayoutShell';
+
+const heading = Oswald({ subsets: ['latin'], variable: '--font-heading', display: 'swap' });
+const body = Inter({ subsets: ['latin'], variable: '--font-body', display: 'swap' });
 
 export const metadata: Metadata = {
   title: 'The Pan N Grill',
@@ -34,8 +38,8 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className="font-body bg-white text-gray-800">
+    <html lang="en" className={`${heading.variable} ${body.variable}`}>
+      <body className="font-body">
         <CartProvider>
           <LayoutShell>{children}</LayoutShell>
         </CartProvider>

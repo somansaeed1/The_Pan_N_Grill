@@ -28,18 +28,6 @@ export default function LocationModal({ open, onClose }: LocationModalProps) {
     orderRule: any;
   } | null>(null);
 
-  const handleLocationSelect = (data: {
-    lat: number;
-    lng: number;
-    cityName: string | null;
-    distanceKm: number;
-    deliveryAllowed: boolean;
-    orderRule: any;
-  }) => {
-    setLocationData(data);
-    setError('');
-  };
-
   const handleAutoDetect = async () => {
     setLoading(true);
     setError('');
@@ -90,35 +78,12 @@ export default function LocationModal({ open, onClose }: LocationModalProps) {
     }
   };
 
-  const saveLocation = (data: any) => {
-    try {
-      const mapsLink = `https://www.google.com/maps/search/?api=1&query=${data.lat},${data.lng}`;
-      const locSnapshot = {
-        lat: +data.lat,
-        lng: +data.lng,
-        timestamp: typeof window !== 'undefined' ? Date.now() : 0,
-        distanceKm: data.distanceKm,
-        message: data.orderRule.message,
-        mapsLink,
-        name: data.cityName || null,
-        deliveryAllowed: data.deliveryAllowed,
-        orderRule: data.orderRule
-      };
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('panngrill-location', JSON.stringify(locSnapshot));
-      }
-    } catch (e) {
-      console.warn('Could not save location:', e);
-    }
-  };
-
-
   if (!open) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg max-w-lg w-full p-5 sm:p-6 shadow-lg max-h-[90vh] sm:max-h-[85vh] overflow-auto">
-        <h3 className="text-lg sm:text-xl font-bold mb-2">Where are you located?</h3>
+      <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-lift max-h-[90vh] overflow-y-auto">
+        <h3 className="text-2xl font-bold uppercase text-primary-900 mb-2">Where are you located?</h3>
         <p className="text-sm sm:text-base text-gray-600 mb-4">
           We need your location to determine delivery availability and any minimum order requirements.
         </p>
@@ -130,7 +95,7 @@ export default function LocationModal({ open, onClose }: LocationModalProps) {
           <button
             onClick={handleAutoDetect}
             disabled={loading}
-            className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-400 text-white py-3 sm:py-2 rounded transition-colors text-sm sm:text-base font-medium min-h-[48px] touch-manipulation"
+            className="btn-primary w-full"
           >
             {loading ? 'Getting location...' : 'Use my device location'}
           </button>
@@ -138,7 +103,7 @@ export default function LocationModal({ open, onClose }: LocationModalProps) {
 
         {/* Location Detection Results */}
         {locationData && (
-          <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="mb-4 p-4 bg-cream border border-gold-400 rounded-xl">
             <h4 className="font-semibold text-gray-800 mb-2">📍 Location Selected</h4>
             <div className="grid grid-cols-2 gap-2 text-sm">
               <div>
@@ -165,8 +130,6 @@ export default function LocationModal({ open, onClose }: LocationModalProps) {
             <p className="text-xs text-gray-600 mt-2">{locationData.orderRule.message}</p>
           </div>
         )}
-
-
 
         <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center mt-4 gap-3 sm:gap-0">
           <button
@@ -202,7 +165,7 @@ export default function LocationModal({ open, onClose }: LocationModalProps) {
                 }
                 onClose(decision);
               }}
-              className="px-4 py-2.5 sm:py-2 bg-green-500 hover:bg-green-600 text-white rounded text-sm sm:text-base transition-colors min-h-[48px] touch-manipulation order-1 sm:order-2"
+              className="btn-primary order-1 sm:order-2"
             >
               Continue with Location
             </button>

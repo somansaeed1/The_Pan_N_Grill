@@ -87,7 +87,7 @@ export default function MenuPage() {
       {/* Menu Header */}
       <section className="bg-primary-900 text-white py-12 sm:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-heading font-bold mb-3 sm:mb-4">Our Menu</h1>
+          <h1 className="text-4xl font-bold uppercase sm:text-5xl mb-3">Our Menu</h1>
           <p className="text-base sm:text-lg md:text-xl text-gray-200 max-w-2xl mx-auto">
             Discover our authentic Pakistani cuisine with traditional flavors and modern presentation
           </p>
@@ -120,7 +120,7 @@ export default function MenuPage() {
       {/* Desktop Category Navigation */}
       <div className="hidden md:block menu-category-nav bg-white border-b shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex overflow-x-auto py-3 sm:py-4 space-x-3 sm:space-x-4 md:space-x-6">
+          <div className="flex overflow-x-auto no-scrollbar py-3 sm:py-4 space-x-3 sm:space-x-4 md:space-x-6">
             {filteredCategories.map((categoryId) => (
               <button
                 key={categoryId}
