@@ -83,6 +83,8 @@ interface CartContextType {
   clearCart: () => void;
   getTotalItems: () => number;
   getTotalPrice: () => number;
+  /** False until the saved cart has been read from the browser. */
+  isReady: boolean;
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
 }
@@ -136,10 +138,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
       clearCart,
       getTotalItems: () => getTotalItems(cartItems),
       getTotalPrice: () => summary.total,
+      isReady: hydrated,
       isCartOpen,
       setIsCartOpen,
     };
-  }, [cartItems, isCartOpen, addToCart, removeFromCart, updateQuantity, clearCart]);
+  }, [cartItems, hydrated, isCartOpen, addToCart, removeFromCart, updateQuantity, clearCart]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

@@ -7,6 +7,7 @@ export const SITE = {
     { label: '0321-7320055', href: 'tel:03217320055' },
   ],
   whatsapp: { label: '0345-6500649', href: 'https://wa.me/923456500649' },
+  whatsappNumber: '923456500649',
   facebook: 'https://www.facebook.com/share/1AgzKa1R8s/',
 } as const;
 
