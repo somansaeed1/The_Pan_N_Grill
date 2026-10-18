@@ -1,151 +1,151 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { CartItem } from '@/types';
-import { showToast, calculateTotal, getTotalItems } from '@/lib/cartUtils';
-import { isDeliveryAvailableByDistance, isDeliveryAvailable } from '@/lib/deliveryZoneUtils';
+import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useState, ReactNode } from 'react';
+import { AddOn, CartItem } from '@/types';
+import { CartSummary, getTotalItems, makeLineId, showToast, summarize } from '@/lib/cartUtils';
+import { MAX_LINE_QUANTITY } from '@/lib/catalog';
+
+const STORAGE_KEY = 'panngrill-cart-v2';
+const LEGACY_STORAGE_KEY = 'panngrill-cart';
+
+export interface AddToCartInput {
+  id: string;
+  name: string;
+  price: number;
+  size: string;
+  addOns?: AddOn[];
+  image?: string;
+}
+
+type Action =
+  | { type: 'hydrate'; items: CartItem[] }
+  | { type: 'add'; item: AddToCartInput }
+  | { type: 'setQuantity'; lineId: string; quantity: number }
+  | { type: 'remove'; lineId: string }
+  | { type: 'clear' };
+
+function reducer(items: CartItem[], action: Action): CartItem[] {
+  switch (action.type) {
+    case 'hydrate':
+      return action.items;
+    case 'add': {
+      const addOns = action.item.addOns ?? [];
+      const lineId = makeLineId(action.item.id, action.item.size, addOns);
+      const existing = items.find((i) => i.lineId === lineId);
+      if (existing) {
+        return items.map((i) =>
+          i.lineId === lineId ? { ...i, quantity: Math.min(i.quantity + 1, MAX_LINE_QUANTITY) } : i
+        );
+      }
+      return [...items, { ...action.item, addOns, lineId, quantity: 1 }];
+    }
+    case 'setQuantity':
+      if (action.quantity <= 0) return items.filter((i) => i.lineId !== action.lineId);
+      return items.map((i) =>
+        i.lineId === action.lineId ? { ...i, quantity: Math.min(action.quantity, MAX_LINE_QUANTITY) } : i
+      );
+    case 'remove':
+      return items.filter((i) => i.lineId !== action.lineId);
+    case 'clear':
+      return [];
+  }
+}
+
+/** Accepts saved carts from both the current and the pre-add-on format. */
+function parseSavedCart(raw: string | null): CartItem[] {
+  if (!raw) return [];
+  const parsed = JSON.parse(raw);
+  if (!Array.isArray(parsed)) return [];
+  return parsed
+    .filter((i) => i && typeof i.id === 'string' && Number(i.price) >= 0 && Number(i.quantity) > 0)
+    .map((i) => {
+      const addOns: AddOn[] = Array.isArray(i.addOns) ? i.addOns : [];
+      const size = i.size || 'regular';
+      return {
+        id: i.id,
+        name: String(i.name),
+        price: Number(i.price),
+        size,
+        addOns,
+        quantity: Math.min(Number(i.quantity), MAX_LINE_QUANTITY),
+        image: i.image,
+        lineId: makeLineId(i.id, size, addOns),
+      };
+    });
+}
 
 interface CartContextType {
   cartItems: CartItem[];
-  addToCart: (item: Omit<CartItem, 'quantity'>) => void;
-  removeFromCart: (itemId: string, size: string) => void;
-  updateQuantity: (itemId: string, size: string, newQuantity: number) => void;
+  summary: CartSummary;
+  addToCart: (item: AddToCartInput) => void;
+  removeFromCart: (lineId: string) => void;
+  updateQuantity: (lineId: string, quantity: number) => void;
+  clearCart: () => void;
   getTotalItems: () => number;
   getTotalPrice: () => number;
-  clearCart: () => void;
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
-  setDeliveryZone: (zone: { distanceKm: number; cityName: string | null } | null) => void;
-  deliveryZone: { distanceKm: number; cityName: string | null } | null;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartItems, dispatch] = useReducer(reducer, []);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [deliveryZone, setDeliveryZone] = useState<{ distanceKm: number; cityName: string | null } | null>(null);
-  const [mounted, setMounted] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
 
-  // Set mounted flag
   useEffect(() => {
-    setMounted(true);
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY) ?? localStorage.getItem(LEGACY_STORAGE_KEY);
+      dispatch({ type: 'hydrate', items: parseSavedCart(saved) });
+    } catch {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+    setHydrated(true);
   }, []);
 
-  // Load cart from localStorage on mount
   useEffect(() => {
-    if (!mounted || typeof window === 'undefined') return;
-    
+    if (!hydrated) return;
     try {
-      const savedCart = localStorage.getItem('panngrill-cart');
-      if (savedCart) {
-        const parsedCart = JSON.parse(savedCart);
-        if (Array.isArray(parsedCart)) {
-          setCartItems(parsedCart);
-        }
-      }
-    } catch (error) {
-      console.error('Error loading cart from localStorage:', error);
-      localStorage.removeItem('panngrill-cart');
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cartItems));
+      localStorage.removeItem(LEGACY_STORAGE_KEY);
+    } catch {
+      showToast('Unable to save your cart on this device.', 'error');
     }
-  }, [mounted]);
+  }, [cartItems, hydrated]);
 
-  // Save cart to localStorage whenever it changes
-  useEffect(() => {
-    if (!mounted || typeof window === 'undefined') return;
-    
-    try {
-      localStorage.setItem('panngrill-cart', JSON.stringify(cartItems));
-    } catch (error) {
-      console.error('Error saving cart to localStorage:', error);
-      showToast('Unable to save cart. Please try again.', 'error');
-    }
-  }, [cartItems, mounted]);
-
-  const addToCart = (item: Omit<CartItem, 'quantity'>) => {
-    // Check if delivery zone is set and valid
-    if (deliveryZone) {
-      const distanceDeliveryAllowed = isDeliveryAvailableByDistance(deliveryZone.distanceKm);
-      const cityDeliveryAllowed = isDeliveryAvailable(deliveryZone.cityName);
-      
-      if (!distanceDeliveryAllowed || !cityDeliveryAllowed) {
-        showToast('Cannot add items to cart. Delivery is not available at your location.', 'error');
-        return;
-      }
-    }
-
-    setCartItems((prev) => {
-      const existingItem = prev.find(
-        (cartItem) => cartItem.id === item.id && cartItem.size === item.size
-      );
-
-      if (existingItem) {
-        return prev.map((cartItem) =>
-          cartItem.id === item.id && cartItem.size === item.size
-            ? { ...cartItem, quantity: cartItem.quantity + 1 }
-            : cartItem
-        );
-      } else {
-        return [...prev, { ...item, quantity: 1 }];
-      }
-    });
-
-    showToast(`${item.name} added to cart!`);
-  };
-
-  const removeFromCart = (itemId: string, size: string) => {
-    setCartItems((prev) =>
-      prev.filter((item) => !(item.id === itemId && item.size === size))
-    );
-  };
-
-  const updateQuantity = (itemId: string, size: string, newQuantity: number) => {
-    if (newQuantity <= 0) {
-      removeFromCart(itemId, size);
-      return;
-    }
-
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === itemId && item.size === size
-          ? { ...item, quantity: newQuantity }
-          : item
-      )
-    );
-  };
-
-  const getTotalItemsCount = () => getTotalItems(cartItems);
-  const getTotalPrice = () => calculateTotal(cartItems);
-
-  const clearCart = () => {
-    setCartItems([]);
-  };
-
-  return (
-    <CartContext.Provider
-      value={{
-        cartItems,
-        addToCart,
-        removeFromCart,
-        updateQuantity,
-        getTotalItems: getTotalItemsCount,
-        getTotalPrice,
-        clearCart,
-        isCartOpen,
-        setIsCartOpen,
-        setDeliveryZone,
-        deliveryZone,
-      }}
-    >
-      {children}
-    </CartContext.Provider>
+  const addToCart = useCallback((item: AddToCartInput) => {
+    dispatch({ type: 'add', item });
+    showToast(`${item.name} added to cart`);
+  }, []);
+  const removeFromCart = useCallback((lineId: string) => dispatch({ type: 'remove', lineId }), []);
+  const updateQuantity = useCallback(
+    (lineId: string, quantity: number) => dispatch({ type: 'setQuantity', lineId, quantity }),
+    []
   );
+  const clearCart = useCallback(() => dispatch({ type: 'clear' }), []);
+
+  const value = useMemo<CartContextType>(() => {
+    const summary = summarize(cartItems);
+    return {
+      cartItems,
+      summary,
+      addToCart,
+      removeFromCart,
+      updateQuantity,
+      clearCart,
+      getTotalItems: () => getTotalItems(cartItems),
+      getTotalPrice: () => summary.total,
+      isCartOpen,
+      setIsCartOpen,
+    };
+  }, [cartItems, isCartOpen, addToCart, removeFromCart, updateQuantity, clearCart]);
+
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
 
 export const useCart = () => {
   const context = useContext(CartContext);
-  if (context === undefined) {
-    throw new Error('useCart must be used within a CartProvider');
-  }
+  if (!context) throw new Error('useCart must be used within a CartProvider');
   return context;
 };

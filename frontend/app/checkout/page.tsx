@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import { CartItem } from '@/types';
-import { showToast } from '@/lib/cartUtils';
+import { formatPrice, lineTotal, showToast, unitPrice } from '@/lib/cartUtils';
 import { useCart } from '@/components/Cart/CartProvider';
 import { useDeliveryZone } from '@/hooks/useDeliveryZone';
 
@@ -14,8 +13,8 @@ const WHATSAPP_NUMBER = '923456500649';
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { clearCart, setDeliveryZone } = useCart();
-  const [cartData, setCartData] = useState<{ items: CartItem[]; total: number } | null>(null);
+  const { cartItems, summary, clearCart } = useCart();
+  const cartData = { items: cartItems, total: summary.total };
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
@@ -42,38 +41,6 @@ export default function CheckoutPage() {
     validateOrder
   } = useDeliveryZone();
 
-
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const raw = localStorage.getItem('checkoutData');
-        if (raw) {
-          const parsed = JSON.parse(raw);
-
-          // Normalize for backward compatibility: older snapshots used `qty`.
-          if (parsed && Array.isArray(parsed.items)) {
-            const normalizedItems = parsed.items.map((it: any) => ({
-              id: it.id,
-              name: it.name,
-              // ensure numeric price
-              price: typeof it.price === 'number' ? it.price : Number(it.price) || 0,
-              // support legacy `qty` field
-              quantity: typeof it.quantity === 'number' ? it.quantity : Number(it.qty) || 0,
-              size: it.size || 'regular',
-              image: it.image || '',
-            }));
-
-            setCartData({ items: normalizedItems, total: Number(parsed.total) || 0 });
-          } else {
-            setCartData(parsed);
-          }
-        }
-      } catch (e) {
-        console.error('Failed to parse checkoutData', e);
-      }
-    }
-  }, []);
 
 
   const handleInputChange = (
@@ -140,8 +107,9 @@ export default function CheckoutPage() {
     lines.push('');
     lines.push('Items:');
     cartData.items.forEach((it) => {
-      const lineTotal = it.price * it.quantity;
-      lines.push(`- ${it.name} (x${it.quantity}) - Rs${lineTotal}`);
+      const size = it.size !== 'regular' ? ` [${it.size}]` : '';
+      const extras = it.addOns.length > 0 ? ` + ${it.addOns.map((a) => a.name).join(', ')}` : '';
+      lines.push(`- ${it.name}${size}${extras} (x${it.quantity}) - Rs${lineTotal(it)}`);
     });
 
     lines.push('');
@@ -189,11 +157,6 @@ export default function CheckoutPage() {
 
     // Clear cart and checkout data after order is placed
     clearCart();
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('checkoutData');
-      localStorage.removeItem('panngrill-cart'); // Ensure cart is cleared from localStorage
-    }
-    setCartData({ items: [], total: 0 }); // Clear local cartData state
     showToast('Order placed successfully!', 'success');
     
     // Use setTimeout to ensure state updates complete before navigation
@@ -355,11 +318,6 @@ export default function CheckoutPage() {
                   e.preventDefault();
                   if (validateForm()) {
                     clearCart();
-                    if (typeof window !== 'undefined') {
-                      localStorage.removeItem('checkoutData');
-                      localStorage.removeItem('panngrill-cart');
-                    }
-                    setCartData({ items: [], total: 0 }); // Clear local cartData state
                     showToast('Order placed successfully!', 'success');
                     setTimeout(() => {
                       if (typeof window !== 'undefined') {
@@ -408,17 +366,24 @@ export default function CheckoutPage() {
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {cartData && cartData.items.length > 0 ? (
-                    cartData.items.map((item, idx) => (
-                      <tr key={idx} className="py-3">
+                    cartData.items.map((item) => (
+                      <tr key={item.lineId} className="py-3">
                         <td className="py-2">
                           <div className="font-medium text-gray-800">{item.name}</div>
+                          {(item.size !== 'regular' || item.addOns.length > 0) && (
+                            <div className="text-gray-500 text-xs">
+                              {item.size !== 'regular' && `Size ${item.size}`}
+                              {item.size !== 'regular' && item.addOns.length > 0 && ' · '}
+                              {item.addOns.length > 0 && `+ ${item.addOns.map((a) => a.name).join(', ')}`}
+                            </div>
+                          )}
                           <div className="text-gray-500 text-xs">
-                            Rs{item.price} × {item.quantity}
+                            {formatPrice(unitPrice(item))} × {item.quantity}
                           </div>
                         </td>
                         <td className="py-2 text-right pr-6">{item.quantity}</td>
                         <td className="py-2 text-right font-semibold text-gray-800">
-                          Rs{item.price * item.quantity}
+                          {formatPrice(lineTotal(item))}
                         </td>
                       </tr>
                     ))
