@@ -3,13 +3,35 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { MenuItem } from '@/types';
+import { ADD_ONS_BY_CATEGORY, UNAVAILABLE_ITEM_IDS } from '@/lib/catalog';
+import { formatPrice } from '@/lib/cartUtils';
 import { useCart } from '../Cart/CartProvider';
 
-export default function MenuItemCard({ item }: { item: MenuItem }) {
+interface MenuItemCardProps {
+  item: MenuItem;
+  categoryId: string;
+}
+
+export default function MenuItemCard({ item, categoryId }: MenuItemCardProps) {
   const { addToCart } = useCart();
   const sizes = item.sizes ? Object.keys(item.sizes) : [];
+  const addOnOptions = ADD_ONS_BY_CATEGORY[categoryId] ?? [];
+  const available = item.available !== false && !UNAVAILABLE_ITEM_IDS.has(item.id);
+
   const [size, setSize] = useState(sizes[0] ?? 'regular');
-  const price = item.price ?? item.sizes?.[size] ?? 0;
+  const [selected, setSelected] = useState<string[]>([]);
+
+  const basePrice = item.price ?? item.sizes?.[size] ?? 0;
+  const chosenAddOns = addOnOptions.filter((a) => selected.includes(a.id));
+  const price = basePrice + chosenAddOns.reduce((sum, a) => sum + a.price, 0);
+
+  const toggleAddOn = (id: string) =>
+    setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+
+  const handleAdd = () => {
+    addToCart({ id: item.id, name: item.name, price: basePrice, size, addOns: chosenAddOns, image: item.image });
+    setSelected([]);
+  };
 
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-card transition hover:-translate-y-1 hover:shadow-lift">
@@ -19,8 +41,13 @@ export default function MenuItemCard({ item }: { item: MenuItem }) {
           alt={item.name}
           fill
           sizes="(min-width:1280px) 25vw, (min-width:1024px) 33vw, 50vw"
-          className="object-cover transition duration-500 group-hover:scale-110"
+          className={`object-cover transition duration-500 group-hover:scale-110 ${available ? '' : 'grayscale'}`}
         />
+        {!available && (
+          <span className="absolute left-3 top-3 rounded-full bg-primary-900 px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
+            Sold out
+          </span>
+        )}
       </div>
 
       <div className="flex flex-1 flex-col p-4">
@@ -29,7 +56,7 @@ export default function MenuItemCard({ item }: { item: MenuItem }) {
           {item.description}
         </p>
 
-        {sizes.length > 0 && (
+        {available && sizes.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-2" role="radiogroup" aria-label={`${item.name} size`}>
             {sizes.map((s) => (
               <button
@@ -47,14 +74,33 @@ export default function MenuItemCard({ item }: { item: MenuItem }) {
           </div>
         )}
 
-        <div className="mt-auto flex items-center justify-between pt-4">
-          <span className="text-xl font-bold text-primary-600">₨{price}</span>
+        {available && addOnOptions.length > 0 && (
+          <fieldset className="mt-3 space-y-1">
+            <legend className="sr-only">{item.name} add-ons</legend>
+            {addOnOptions.map((addOn) => (
+              <label key={addOn.id} className="flex min-h-[32px] cursor-pointer items-center gap-2 text-sm text-gray-700">
+                <input
+                  type="checkbox"
+                  checked={selected.includes(addOn.id)}
+                  onChange={() => toggleAddOn(addOn.id)}
+                  className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-600"
+                />
+                <span className="flex-1">{addOn.name}</span>
+                <span className="text-gray-500">+{formatPrice(addOn.price)}</span>
+              </label>
+            ))}
+          </fieldset>
+        )}
+
+        <div className="mt-auto flex items-center justify-between gap-2 pt-4">
+          <span className="text-xl font-bold text-primary-600">{formatPrice(price)}</span>
           <button
-            onClick={() => addToCart({ id: item.id, name: item.name, price, size, image: item.image })}
+            onClick={handleAdd}
+            disabled={!available}
             className="btn-primary !px-4 !py-2"
-            aria-label={`Add ${item.name} to cart`}
+            aria-label={available ? `Add ${item.name} to cart` : `${item.name} is sold out`}
           >
-            Add
+            {available ? 'Add' : 'Sold out'}
           </button>
         </div>
       </div>
