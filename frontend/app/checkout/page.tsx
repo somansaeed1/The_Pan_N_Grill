@@ -6,6 +6,7 @@ import { useCart } from '@/components/Cart/CartProvider';
 import OrderSummary from '@/components/Checkout/OrderSummary';
 import SuccessModal, { PlacedOrder } from '@/components/Checkout/SuccessModal';
 import { useDeliveryZone } from '@/hooks/useDeliveryZone';
+import { API_URL, submitOrder } from '@/lib/api';
 import { formatPrice, showToast } from '@/lib/cartUtils';
 import { buildWhatsAppMessage, buildWhatsAppUrl } from '@/lib/order';
 import { CheckoutErrors, CheckoutField, CheckoutForm, LIMITS, validateCheckout, validateField } from '@/lib/validation';
@@ -61,7 +62,7 @@ function Section({ step, title, children }: { step: number; title: string; child
 
 export default function CheckoutPage() {
   const { cartItems, summary, clearCart, isReady } = useCart();
-  const { orderRule, deliveryAllowed, hasLocation } = useDeliveryZone();
+  const { orderRule, deliveryAllowed, hasLocation, userLocation } = useDeliveryZone();
 
   const [form, setForm] = useState<CheckoutForm>(INITIAL_FORM);
   const [errors, setErrors] = useState<CheckoutErrors>({});
@@ -85,7 +86,7 @@ export default function CheckoutPage() {
 
   const checkField = (field: CheckoutField) => setErrors((prev) => ({ ...prev, [field]: validateField(field, form) || undefined }));
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (submitting) return;
 
@@ -104,8 +105,34 @@ export default function CheckoutPage() {
     }
 
     setSubmitting(true);
-    const whatsappUrl = buildWhatsAppUrl(buildWhatsAppMessage(form, cartItems, summary));
-    // Opened synchronously from the click so browsers do not treat it as a blocked pop-up.
+    let message = buildWhatsAppMessage(form, cartItems, summary);
+    let total = summary.total;
+
+    // When an order API is configured it re-checks the order and prices it from the menu.
+    if (API_URL) {
+      const result = await submitOrder(form, cartItems, form.method === 'Delivery' ? userLocation : null);
+
+      if (result.kind === 'invalid') {
+        setErrors(result.errors);
+        setSubmitting(false);
+        const field = (['fullName', 'phone', 'deliveryAddress', 'orderNotes'] as const).find((f) => result.errors[f]);
+        if (field) formRef.current?.querySelector<HTMLElement>(`#${field}`)?.focus();
+        showToast(result.errors.cart ?? result.errors.delivery ?? result.message, 'error', { title: 'We could not accept the order' });
+        return;
+      }
+
+      if (result.kind === 'ok') {
+        message = result.message;
+        if (result.total !== summary.total) {
+          total = result.total;
+          showToast(`The total is now ${formatPrice(result.total)} to match current menu prices.`, 'info', { title: 'Price updated' });
+        }
+      } else {
+        showToast('Our order server did not respond, so we are sending your order straight to WhatsApp.', 'info', { title: 'Sending directly' });
+      }
+    }
+
+    const whatsappUrl = buildWhatsAppUrl(message);
     const whatsappTab = window.open(whatsappUrl, '_blank');
     if (whatsappTab) {
       whatsappTab.opener = null;
@@ -114,7 +141,7 @@ export default function CheckoutPage() {
       showToast('Your browser blocked the WhatsApp window. Use the button on the next screen to open it.', 'error', { title: 'WhatsApp did not open' });
     }
 
-    setPlacedOrder({ name: form.fullName.trim(), method: form.method, itemCount, total: summary.total, whatsappUrl });
+    setPlacedOrder({ name: form.fullName.trim(), method: form.method, itemCount, total, whatsappUrl });
     clearCart();
     setSubmitting(false);
   };
