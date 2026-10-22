@@ -1,7 +1,12 @@
 const express = require('express');
 const cors = require('cors');
+const orders = require('./orders');
+const rateLimit = require('./rateLimit');
 
 const app = express();
+
+app.disable('x-powered-by');
+app.set('trust proxy', 1);
 
 const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:3000')
   .split(',')
@@ -15,8 +20,23 @@ app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok' });
 });
 
+app.use('/api/orders', rateLimit({ windowMs: 60_000, max: 30 }), orders);
+
 app.use('/api', (_req, res) => {
-  res.status(404).json({ error: 'Not found' });
+  res.status(404).json({ error: 'not_found', message: 'Not found' });
+});
+
+// Malformed JSON and unexpected errors get a JSON response instead of an HTML page.
+// eslint-disable-next-line no-unused-vars
+app.use((err, _req, res, _next) => {
+  if (err.type === 'entity.parse.failed') {
+    return res.status(400).json({ error: 'bad_request', message: 'The request body is not valid JSON.' });
+  }
+  if (err.type === 'entity.too.large') {
+    return res.status(413).json({ error: 'too_large', message: 'The request is too large.' });
+  }
+  console.error(err);
+  res.status(500).json({ error: 'server_error', message: 'Something went wrong on our side. Please try again.' });
 });
 
 module.exports = app;
