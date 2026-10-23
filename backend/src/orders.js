@@ -2,6 +2,7 @@ const express = require('express');
 const { priceOrder } = require('./pricing');
 const { normalizePhone, validateCustomer } = require('./validation');
 const { distanceFromRestaurant, isValidCoordinate, deliveryRuleFor } = require('./delivery');
+const db = require('./db');
 
 const router = express.Router();
 
@@ -34,9 +35,18 @@ function buildMessage(orderId, customer, priced) {
 /**
  * POST /api/orders
  * Validates the order, prices it from the server's menu and returns the confirmed
- * order plus the WhatsApp message. Nothing is stored.
+ * order plus the WhatsApp message. When DATABASE_URL is set the order is also saved
+ * to PostgreSQL; otherwise nothing is stored.
  */
-router.post('/', (req, res) => {
+router.post('/', async (req, res, next) => {
+  try {
+    await handleOrder(req, res);
+  } catch (err) {
+    next(err);
+  }
+});
+
+async function handleOrder(req, res) {
   const body = req.body;
   if (!body || typeof body !== 'object' || Array.isArray(body)) {
     return res.status(400).json({ error: 'bad_request', message: 'Send the order as a JSON object.' });
@@ -86,18 +96,36 @@ router.post('/', (req, res) => {
   };
 
   const orderId = newOrderId();
-  res.status(201).json({
-    orderId,
-    order: {
-      customer,
-      items: priced.lines,
-      itemsSubtotal: priced.itemsSubtotal,
-      addOnsTotal: priced.addOnsTotal,
-      total: priced.total,
-      delivery,
-    },
-    message: buildMessage(orderId, customer, priced),
-  });
+  const order = {
+    customer,
+    items: priced.lines,
+    itemsSubtotal: priced.itemsSubtotal,
+    addOnsTotal: priced.addOnsTotal,
+    total: priced.total,
+    delivery,
+  };
+
+  if (db.isConfigured()) {
+    try {
+      await db.saveOrder(orderId, order);
+    } catch (err) {
+      console.error('Could not save order:', err.message);
+      return res.status(503).json({ error: 'storage_unavailable', message: 'We could not save your order right now. Please try again.' });
+    }
+  }
+
+  res.status(201).json({ orderId, order, message: buildMessage(orderId, customer, priced), stored: db.isConfigured() });
+}
+
+/** GET /api/orders/summary: order count and recent references, with no customer details. */
+router.get('/summary', async (_req, res) => {
+  if (!db.isConfigured()) return res.json({ stored: false });
+  try {
+    res.json({ stored: true, ...(await db.orderSummary()) });
+  } catch (err) {
+    console.error('Could not read orders:', err.message);
+    res.status(503).json({ error: 'storage_unavailable', message: 'The order database is not reachable.' });
+  }
 });
 
 module.exports = router;

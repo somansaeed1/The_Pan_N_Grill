@@ -6,7 +6,7 @@ import { useCart } from '@/components/Cart/CartProvider';
 import OrderSummary from '@/components/Checkout/OrderSummary';
 import SuccessModal, { PlacedOrder } from '@/components/Checkout/SuccessModal';
 import { useDeliveryZone } from '@/hooks/useDeliveryZone';
-import { API_URL, submitOrder } from '@/lib/api';
+import { API_ENABLED, submitOrder } from '@/lib/api';
 import { formatPrice, showToast } from '@/lib/cartUtils';
 import { buildWhatsAppMessage, buildWhatsAppUrl } from '@/lib/order';
 import { CheckoutErrors, CheckoutField, CheckoutForm, LIMITS, validateCheckout, validateField } from '@/lib/validation';
@@ -109,7 +109,7 @@ export default function CheckoutPage() {
     let total = summary.total;
 
     // When an order API is configured it re-checks the order and prices it from the menu.
-    if (API_URL) {
+    if (API_ENABLED) {
       const result = await submitOrder(form, cartItems, form.method === 'Delivery' ? userLocation : null);
 
       if (result.kind === 'invalid') {

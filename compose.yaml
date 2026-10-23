@@ -1,0 +1,50 @@
+# The Pan N Grill: web (Next.js) + backend (Express API) + db (PostgreSQL).
+#
+#   cp .env.example .env     # then set a database password
+#   docker compose up -d --build
+#
+# Only the web service is published (port 80). The backend and database are reachable
+# only from other containers on the Compose network, by service name (backend, db).
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: pannngrill
+      POSTGRES_USER: pannngrill
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pannngrill -d pannngrill"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build: ./backend
+    restart: always
+    environment:
+      PORT: 4000
+      DATABASE_URL: postgres://pannngrill:${POSTGRES_PASSWORD}@db:5432/pannngrill
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        BACKEND_URL: http://backend:4000
+    restart: always
+    ports:
+      - "80:3000"
+    depends_on:
+      - backend
+
+volumes:
+  pg_data:
+    name: pannngrill_pg_data

@@ -1,8 +1,16 @@
 import { CartItem } from '@/types';
 import { CheckoutErrors, CheckoutForm } from './validation';
 
-/** Base URL of the order API. When unset, checkout works without a server. */
-export const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? '').replace(/\/$/, '');
+const configuredApiUrl = process.env.NEXT_PUBLIC_API_URL ?? '';
+
+/** True when an order API is configured. When it is not, checkout works without a server. */
+export const API_ENABLED = configuredApiUrl !== '';
+
+/**
+ * Base URL of the order API. A value of "/" means same-origin: the browser calls /api/...
+ * on the site itself, which the server proxies to the backend (used in Docker).
+ */
+export const API_URL = configuredApiUrl.replace(/\/$/, '');
 
 const TIMEOUT_MS = 8000;
 
