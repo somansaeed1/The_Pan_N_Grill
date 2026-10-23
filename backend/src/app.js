@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const orders = require('./orders');
 const rateLimit = require('./rateLimit');
+const db = require('./db');
 
 const app = express();
 
@@ -16,8 +17,11 @@ const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:3000')
 app.use(cors({ origin: allowedOrigins }));
 app.use(express.json({ limit: '100kb' }));
 
-app.get('/api/health', (_req, res) => {
-  res.json({ status: 'ok' });
+// Used by the load balancer: reports unhealthy when a configured database is unreachable.
+app.get('/api/health', async (_req, res) => {
+  const database = await db.ping();
+  const healthy = database !== 'down';
+  res.status(healthy ? 200 : 503).json({ status: healthy ? 'ok' : 'degraded', database });
 });
 
 app.use('/api/orders', rateLimit({ windowMs: 60_000, max: 30 }), orders);
